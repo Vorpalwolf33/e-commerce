@@ -5,7 +5,7 @@ import {Route, Switch} from 'react-router-dom';
 const GuestNavbar = (props) => {
     return (
         <div>
-            <button>Login</button>
+            <button onClick={() => {props.history.push('/login')}}>Login / Register</button>
         </div>
     )
 }
@@ -13,7 +13,7 @@ const GuestNavbar = (props) => {
 const CustomerNavbar = (props) => {
     return (
         <div>
-            <button>Prfile</button>
+            <button>Profile</button>
         </div>
     )
 }
@@ -33,7 +33,7 @@ export default (props) => {
             <Switch>
                 <Route path="/account" component={CustomerNavbar} />
                 <Route path="/admin" component={AdminNavbar} />
-                <Route path="/" exact={true} component={GuestNavbar}/>
+                <Route path="/" component={GuestNavbar}/>
             </Switch>
         </div>
     )
