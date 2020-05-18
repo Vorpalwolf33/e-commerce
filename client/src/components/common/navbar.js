@@ -5,7 +5,7 @@ import {Route, Switch} from 'react-router-dom';
 const GuestNavbar = (props) => {
     return (
         <div>
-            Guest Navbar
+            <button>Login</button>
         </div>
     )
 }
@@ -13,7 +13,7 @@ const GuestNavbar = (props) => {
 const CustomerNavbar = (props) => {
     return (
         <div>
-            Customer Navbar
+            <button>Prfile</button>
         </div>
     )
 }
@@ -21,7 +21,7 @@ const CustomerNavbar = (props) => {
 const AdminNavbar = (props) => {
     return (
         <div>
-            Admin Navbar
+            <button>Profile</button>
         </div>
     )
 }
