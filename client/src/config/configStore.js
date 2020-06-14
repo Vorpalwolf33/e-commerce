@@ -3,11 +3,13 @@ import thunk from 'redux-thunk';
 
 import modalComponentReducer from './reducers/modalComponentReducer';
 import tokenReducer from './reducers/tokenReducer';
+import userReducer from './reducers/userReducer';
 
 export default () => {
     const store = createStore(combineReducers({
         modalComponent: modalComponentReducer,
-        token: tokenReducer
+        token: tokenReducer,
+        user: userReducer
     }), applyMiddleware(thunk));
     return store; 
 }

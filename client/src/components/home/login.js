@@ -1,8 +1,11 @@
 import React from 'react';
 import Navbar from '../common/navbar';
 import {Link} from 'react-router-dom';
+import {connect} from 'react-redux';
 
-export default class Login extends React.Component {
+import {userLogin} from '../../config/actions/userActions';
+
+class Login extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -19,6 +22,8 @@ export default class Login extends React.Component {
 
     handleSubmit = (event) => {
         event.preventDefault();
+        const {email, password} = this.state;
+        this.props.dispatch(userLogin({email, password}));
     }
 
     render() {
@@ -42,3 +47,5 @@ export default class Login extends React.Component {
         )
     }
 }
+
+export default connect()(Login);
