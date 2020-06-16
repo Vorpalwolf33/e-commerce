@@ -7,7 +7,8 @@ module.exports.register = (req, res) => {
     const user = new User(body);
     user.save()
         .then( savedUser => {
-            res.json(savedUser);
+            const {username, email, role} = savedUser;
+            res.json({username, email, role});
         })
         .catch( err => res.json(err))
 }
@@ -22,7 +23,6 @@ module.exports.login = (req, res) => {
             else return Promise.reject({errors: "Invalid email / password"})
         })
         .then( token => {
-            // console.log("token is generated");
             res.json({token})
         })
         .catch(err => {
