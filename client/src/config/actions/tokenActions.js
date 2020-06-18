@@ -1,6 +1,6 @@
 export const saveToken = () => {
-    return (dispatch, getData) => {
-        localStorage.setItem("token", JSON.stringify(getData().token) );
+    return (dispatch, getState) => {
+        localStorage.setItem("token", JSON.stringify(getState().token) );
     }
 }
 

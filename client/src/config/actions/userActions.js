@@ -3,7 +3,7 @@ import Axios from '../configAxios';
 import {setToken} from './tokenActions';
 
 export const loginUser = (userData) => {
-    return (dispatch, getData) => {
+    return (dispatch, getState) => {
         Axios.post('/login', userData)
             .then( (response => {
                 if(response) {
@@ -23,10 +23,10 @@ export const setUser = (userData) => {
 }
 
 export const registerUser = (userData) => {
-    return (dispatch, getData) => {
+    return (dispatch, getState) => {
         Axios.post('/register', userData)
             .then( response => {
-                const user = response.data.user;
+                // const user = response.data.user;
                 console.log(response.data);
                 
             })
