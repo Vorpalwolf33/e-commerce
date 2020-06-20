@@ -33,9 +33,9 @@ module.exports.login = (req, res) => {
 
 module.exports.home = (req, res) => {
     const token = req.headers['x-auth'];
-    const user = (req.user.role) ? {userRole: req.user.role} : {userRole: "Customer"};
+    const user = (req.user.role) ? {role: req.user.role} : {role: "Customer"};
     user.username = req.user.username;
-    res.json({user});
+    res.json(user);
 }
 
 module.exports.logout = (req, res) => {

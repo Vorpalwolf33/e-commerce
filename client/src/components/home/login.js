@@ -3,7 +3,7 @@ import Navbar from '../common/navbar';
 import {Link} from 'react-router-dom';
 import {connect} from 'react-redux';
 
-import {loginUser} from '../../config/actions/userActions';
+import {loginUser, loadUserDetails} from '../../config/actions/userActions';
 
 class Login extends React.Component {
     constructor(props) {
@@ -23,7 +23,7 @@ class Login extends React.Component {
     handleSubmit = (event) => {
         event.preventDefault();
         const {email, password} = this.state;
-        this.props.dispatch(loginUser({email, password}));
+        this.props.dispatch(loginUser({email, password}, this.props.history.push));
     }
 
     render() {

@@ -4,6 +4,8 @@ import Navbar from '../common/navbar';
 import { connect } from 'react-redux';
 
 import {loadHomePageProducts} from '../../config/actions/homePageProductsActions';
+import {setToken} from '../../config/actions/tokenActions';
+import {loadUserDetails} from '../../config/actions/userActions';
 
 class Home extends React.Component{
     constructor( props ) {
@@ -14,9 +16,15 @@ class Home extends React.Component{
     }
 
     componentDidMount() {
-        if(this.props.homePageProducts.length === 0) {
+        const token = localStorage.getItem('token');
+        if(token) {
+            this.props.dispatch(setToken(token));
+            this.props.dispatch(loadUserDetails(this.props.history.push))
+        } 
+        if(this.props.homePageProducts.length === 0 && !token) {
             this.props.dispatch(loadHomePageProducts());
         }
+
     }
 
     render() {
