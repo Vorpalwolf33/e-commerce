@@ -1,6 +1,6 @@
 import Axios from '../configAxios';
 
-import {setToken} from './tokenActions';
+import {setToken, resetToken} from './tokenActions';
 
 export const loginUser = (userData, redirect) => {
     return (dispatch, getState) => {
@@ -52,5 +52,19 @@ export const loadUserDetails = (redirect) => {
                 }
             })
             .catch(err => console.log(err))
+    }
+}
+
+export const logoutUser = (redirect) => {
+    return (dispatch, getState) => {
+        Axios.get('/logout', {headers: {"x-auth": getState().token}})
+            .then( response => {
+                const data = response.data;
+                if(data) {
+                    dispatch(resetToken());
+                    redirect('/');
+                }
+            })
+            .catch( err => console.log(err))
     }
 }

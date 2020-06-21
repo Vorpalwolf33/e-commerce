@@ -3,7 +3,7 @@ import Navbar from '../common/navbar';
 import {Link} from 'react-router-dom';
 import {connect} from 'react-redux';
 
-import {loginUser, loadUserDetails} from '../../config/actions/userActions';
+import {loginUser} from '../../config/actions/userActions';
 
 class Login extends React.Component {
     constructor(props) {

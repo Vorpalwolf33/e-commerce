@@ -10,9 +10,6 @@ import {loadUserDetails} from '../../config/actions/userActions';
 class Home extends React.Component{
     constructor( props ) {
         super( props );
-        this.state = {
-            token: props.token
-        }   
     }
 
     componentDidMount() {
@@ -32,7 +29,6 @@ class Home extends React.Component{
             <div className="home">
                 <Navbar />
                 <Sidebar />
-                {this.state.token}
                 {
                     this.props.homePageProducts.map( (row, index) => {
                         return (
@@ -57,7 +53,8 @@ class Home extends React.Component{
 }
 
 const mapStateToProps = (state) => {
-    return state;
+    const {homePageProducts} = state;
+    return {homePageProducts};
 }
 
 export default connect(mapStateToProps)(Home);
