@@ -23,11 +23,13 @@ export const setUser = (userData) => {
     }
 }
 
-export const registerUser = (userData) => {
+export const registerUser = (userData, redirect) => {
     return (dispatch, getState) => {
         Axios.post('/register', userData)
             .then( response => {
-                // console.log(response.data);                
+                const data = response.data;
+                if(data.role)
+                    redirect("/login");
             })
             .catch()
     }

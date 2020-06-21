@@ -27,7 +27,7 @@ class Register extends React.Component {
         event.preventDefault();
         if(this.state.password === this.state.confirmPassword) {
             const {email, password, username, phoneNo} = this.state;
-            this.props.dispatch(registerUser({username, email, password, mobile: phoneNo}));
+            this.props.dispatch(registerUser({username, email, password, mobile: phoneNo}, this.props.history.push));
         }
         else {
             alert("Entered passwords don't match");

@@ -6,6 +6,7 @@ import Modal from './components/common/modal';
 import Login from './components/home/login';
 import Register from './components/home/register';
 import Admin from './components/admin/admin';
+import CustomerHome from './components/customer/customerHome';
 
 function App() {
   return (
@@ -17,6 +18,7 @@ function App() {
           <Route path="/login" component={Login} exact={true} />
           <Route path="/register" component={Register} exact={true} /> 
           <Route path="/admin" component={Admin} />
+          <Route path="/account" component={CustomerHome} />
         </Switch>
       </BrowserRouter>
     </div>
