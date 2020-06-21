@@ -1,6 +1,6 @@
-import React from 'react';
+import React, {useState} from 'react';
 import '../../styles/sidebar.css';
-import {Route, Switch} from 'react-router-dom';
+import {Route, Switch, Link} from 'react-router-dom';
 
 const CustomerSidebar = (props) => {
     return (
@@ -11,9 +11,20 @@ const CustomerSidebar = (props) => {
 }
 
 const AdminSidebar = (props) => {
+    const [showProductOptions, changeProductOptions] = useState(false);
     return (
         <div>
-            Options
+            <Link to="/admin/dashboard"><button>Dashboard</button></Link>
+            <button onClick={() => {changeProductOptions(!showProductOptions)}}>Products</button>
+            {
+                (showProductOptions)? (
+                    <div>
+                        <Link to="/admin/product"><button>List Products</button></Link>
+                        <Link to="/admin/product/add"><button>Add Product</button></Link>
+                    </div>
+                ):null
+            }
+            <Link to="/admin/categories"><button>Categories</button></Link>
         </div>
     )
 }

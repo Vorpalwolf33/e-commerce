@@ -5,13 +5,19 @@ import modalComponentReducer from './reducers/modalComponentReducer';
 import tokenReducer from './reducers/tokenReducer';
 import userReducer from './reducers/userReducer';
 import HPPR from './reducers/homePageProductsReducer';
+import productReducer from './reducers/productReducer';
+import productListReducer from './reducers/productListReducer';
+import categoriesReducer from './reducers/categoryReducer';
 
 export default () => {
     const store = createStore(combineReducers({
         modalComponent: modalComponentReducer,
         token: tokenReducer,
         user: userReducer,
-        homePageProducts: HPPR
+        homePageProducts: HPPR,
+        product: productReducer,
+        productList: productListReducer,
+        categories: categoriesReducer
     }), applyMiddleware(thunk));
     return store; 
 }
