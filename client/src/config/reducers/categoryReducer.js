@@ -6,6 +6,9 @@ export default (state = null, action) => {
         case "RESET_CATEGORIES":
             state = null;
             break;
+        case "ADD_CATEGORY":
+            state.push(action.payload);
+            break;
         default: break;
     }
     return state;

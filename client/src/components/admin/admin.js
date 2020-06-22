@@ -7,6 +7,7 @@ import Sidebar from '../common/sidebar';
 import Dashboard from './adminComponents/dashboard';
 import ListProducts from './adminComponents/products/listProducts';
 import AddProduct from './adminComponents/products/addProduct';
+import Categories from './adminComponents/categories';
 
 class Admin extends React.Component {
     constructor(props) {
@@ -29,6 +30,7 @@ class Admin extends React.Component {
                         <Route path="/admin/dashboard" exact={true} component={Dashboard} />
                         <Route path="/admin/product" exact={true} component={ListProducts} />
                         <Route path="/admin/product/add" exact={true} component={AddProduct} />
+                        <Route path="/admin/categories" exact={true} component={Categories} />
                     </Switch>
                 </div>                
             </div>

@@ -59,6 +59,8 @@ class ProductForm extends React.Component {
                     Stock:
                     <input type="number" name="stock" value={this.state.stock} onChange={this.handleChange}/>
                 </label><br/>
+
+                <input type="submit" value="Create Product"/>
             </form>
         )
     }
