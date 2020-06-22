@@ -9,13 +9,13 @@ module.exports.add = (req, res) => {
 }
 
 module.exports.remove = (req, res) => {
-    const categoryId = req.body;
+    const categoryId = req.body._id;
     Category.findOneAndRemove({_id: categoryId})
         .then(removedId => res.json({status: true}))
         .catch( err => res.send(err))
 }
 
-module.exports.show = (req, res) => {
+module.exports.list = (req, res) => {
     Category.find()
         .then( categories => {
             res.json(categories);
