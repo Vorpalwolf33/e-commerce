@@ -22,3 +22,15 @@ module.exports.list = (req, res) => {
         })
         .catch(err => res.json(err))
 }
+
+module.exports.update = (req, res) => {
+    const category = req.body.category;
+    Category.findOneAndUpdate({_id: category._id}, {name: category.name})
+        .then( updatedCategory => {
+            if(updatedCategory) {
+                res.json(updatedCategory);
+                console.log(updatedCategory);
+            }
+        })
+        .catch(err => res.json(err))
+}

@@ -35,12 +35,32 @@ export const loadCategories = () => {
 
 export const removeCategory = (category) => {
     return (dispatch, getState) => {
-        Axios.post('account/categories/remove', {_id: category._id}, {headers: {"x-auth": getState().token}})
+        Axios.post('account/category/remove', {_id: category._id}, {headers: {"x-auth": getState().token}})
             .then( response => {
                 if(response.data.status) {
                     let state = getState().categories;
                     state = state.filter( cat => category._id != cat._id);
                     dispatch(setCategories(state));
+                }
+            })
+            .catch(err => console.log(err))
+    }
+}
+
+export const updateCategory = (category) => {
+    return (dispatch, getState) => {
+        Axios.post('/account/category/update', {category}, {headers: {"x-auth": getState().token}})
+            .then( response => {
+                const data = response.data;
+                if(data) {
+                    const categories = getState().categories;
+                    for(let i = 0; i < categories.length; ++i) {
+                        if(categories[i]._id === data._id) {
+                            categories[i] = data;
+                            break;
+                        }
+                    }
+                    dispatch(setCategories(categories));                
                 }
             })
             .catch(err => console.log(err))
