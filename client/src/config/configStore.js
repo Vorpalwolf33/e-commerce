@@ -16,7 +16,7 @@ export default () => {
         user: userReducer,
         homePageProducts: HPPR,
         product: productReducer,
-        productList: productListReducer,
+        productsList: productListReducer,
         categories: categoriesReducer
     }), applyMiddleware(thunk));
     return store; 

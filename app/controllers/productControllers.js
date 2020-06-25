@@ -63,3 +63,28 @@ module.exports.show = (req, res) => {
         })  
         .catch( err => res.json(err))  
 }
+
+module.exports.update = (req, res) => {
+    const _id = req.body.product._id;
+    const {name, price, stock, categoryId, description, isAvailable} = req.body.product;
+    Product.findOneAndUpdate({_id}, {name, price, stock, categoryId, description, isAvailable}, {new: true})
+        .then( updatedProduct => {
+            if(updatedProduct) {
+                res.json(updatedProduct);
+            }
+            else res.json("There was some error while updating the product")
+        })
+        .catch(err => res.json(err))
+        
+}
+
+module.exports.remove = (req, res) => {
+    Product.findByIdAndDelete(req.body.id)
+        .then( deletedProduct => {
+            if(deletedProduct) {
+                res.json({success: true})
+            }
+            else res.json({success: false})
+        })
+        .catch(err => res.json(err))
+}

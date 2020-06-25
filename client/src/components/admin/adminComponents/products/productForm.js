@@ -1,6 +1,9 @@
 import React from 'react';
 import {connect} from 'react-redux'
 
+import {loadCategories} from '../../../../config/actions/categoriesActions';
+import {addProduct, updateProduct} from '../../../../config/actions/productActions';
+
 class ProductForm extends React.Component {
     constructor(props) {
         super(props);
@@ -8,10 +11,19 @@ class ProductForm extends React.Component {
             name: '',
             description: '',
             price: 0,
-            categories: [],
-            availableCategories: [],
+            categoryId: [],
             isAvailable: false,
             stock: 0
+        }
+    }
+
+    componentDidMount() {
+        this.props.dispatch(loadCategories());
+        if(this.props.product && this.props.type === "modify") {
+            this.setState(this.props.product);
+        }
+        if(!this.props.product && this.props.type === "modify") {
+            this.props.history.push('/admin/product');
         }
     }
 
@@ -23,8 +35,33 @@ class ProductForm extends React.Component {
 
     handleSubmit = event => {
         event.preventDefault();
-        this.props.handleSubmit(this.state);
+        if(this.props.type === "add") {
+            this.props.dispatch(addProduct({...this.state}, this.props.redirect));
+        }
+        if(this.props.type === "modify") {
+            this.props.dispatch(updateProduct({...this.state}, this.props.history.push));
+        }
     }
+
+    handleSelection = event => {
+        const temp = event.target.value;
+        this.setState( prevState => {
+            if(prevState.categoryId.includes(temp)) {
+                return {
+                    categoryId: prevState.categoryId.filter( category => category !== temp)
+                }
+            }
+            if(temp === "None") {
+                return {
+                    categoryId: []
+                }
+            }
+            return {
+                categoryId: [...prevState.categoryId, temp]
+            }
+        });
+    }
+
 
     render() {
         return (
@@ -45,10 +82,15 @@ class ProductForm extends React.Component {
                 </label><br/>
 
                 <label>
-                    Categories:
-                    <select multiple={true} value={this.state.categories} onChange={(event) => {this.setState({categories: event.target.value})}}>
-                        {this.state.availableCategories.map( (category, index) => <option key={index} value={category.name}>{category.name}</option>)}
-                    </select>
+                    Categories:<br/>
+                    {
+                        (this.props.categories)? (
+                            <select multiple={true} value={this.state.categoryId} onChange={this.handleSelection}>
+                                <option value="None">None</option>
+                                {this.props.categories.map( (category, index) => <option key={index} value={category._id}>{category.name}</option>)}
+                            </select>
+                        ):null
+                    }
                 </label><br/>
 
                 <label>
@@ -60,14 +102,15 @@ class ProductForm extends React.Component {
                     <input type="number" name="stock" value={this.state.stock} onChange={this.handleChange}/>
                 </label><br/>
 
-                <input type="submit" value="Create Product"/>
+                <input type="submit" value={(this.props.type === "add")?"Create Product":"Update Product"}/>
             </form>
         )
     }
 }
 
 const mapStateToProps = (state) => {
-    return {};
+    const {categories, product} = state;
+    return {categories, product};
 }
 
 export default connect(mapStateToProps)(ProductForm);

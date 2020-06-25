@@ -8,7 +8,8 @@ const Categories = (props) => {
     const [updatedName, setUpdatedName] = useState('');
     const [selectedCategory, setSelectedCategory] = useState('');
     useEffect(() => {
-        props.dispatch(loadCategories());
+        if(!props.categories)
+            props.dispatch(loadCategories());
     }, [props]);
     return (
         <div>
@@ -48,8 +49,8 @@ const Categories = (props) => {
 }
 
 const mapStateToProps = (state) => {
-    const {categories} = state
-    return {categories};
+    const {categories, token} = state
+    return {categories, token};
 }
 
 export default connect(mapStateToProps)(Categories);

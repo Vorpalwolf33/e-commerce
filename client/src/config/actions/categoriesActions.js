@@ -2,7 +2,8 @@ import Axios from '../configAxios';
 
 export const addCategory = (categoryName) => {
     return (dispatch, getState) => {
-        Axios.post("/account/category/add", {name: categoryName} ,{headers: {"x-auth": getState().token}})
+        const token = (getState().token)?getState().token:localStorage.getItem('token');
+        Axios.post("/account/category/add", {name: categoryName} ,{headers: {"x-auth": token}})
             .then( response => {
                 const data = response.data;
                 if(!getState().categories && data)  dispatch(setCategories([data]));
@@ -25,7 +26,8 @@ export const setCategories = (categories) => {
 
 export const loadCategories = () => {
     return (dispatch, getState) => {
-        Axios.get('/account/categories', {headers: {"x-auth": getState().token}})
+        const token = (getState().token)?getState().token:localStorage.getItem('token');
+        Axios.get('/account/categories', {headers: {"x-auth": token}})
             .then( response => {
                 dispatch(setCategories(response.data));
             })

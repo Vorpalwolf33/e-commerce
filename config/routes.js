@@ -13,11 +13,13 @@ routes.get('/account/home', authenticateUser, userControllers.home);
 routes.get('/logout', authenticateUser, userControllers.logout);
 routes.get('/', userControllers.home);
 routes.post('/account/product/add', authoriseUser, productControllers.add);
+routes.post('/account/product/update', authoriseUser, productControllers.update)
+routes.post('/account/product/remove', authoriseUser, productControllers.remove);
 routes.post('/account/category/add', authoriseUser, categoryControllers.add);
 routes.post('/account/category/update', authoriseUser, categoryControllers.update);
 routes.get('/account/categories', authenticateUser, categoryControllers.list);
 routes.post('/account/category/remove', authenticateUser, categoryControllers.remove);
-routes.get('/account/homePageProducts', authoriseUser, productControllers.homeList);
+routes.get('/account/productsList', authoriseUser, productControllers.list);
 routes.get('/homePageProducts', productControllers.homeList);
 routes.get('/product/:id', productControllers.show);
 routes.post('/account/orders/add', authenticateUser, orderControllers.add);
