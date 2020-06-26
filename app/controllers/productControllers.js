@@ -25,19 +25,19 @@ module.exports.homeList = (req, res) => {
     Product.find()
         .then( products => {
             const resp = [];
-
             // Temporarily use categories to make the multiple lists of the products
             Category.find()
                 .then( categories => {
                     categories.forEach( category => {
-                        const categoryProds = products.filter( product => product.categoryIds.includes(category._id));
+                        const categoryProds = products.filter( product => product.categoryId.includes(category._id));
                         if(categoryProds.length > 0)
                             resp.push({
                                 type: category.name,
                                 products: categoryProds
                             })
                     })
-                    res.json(resp)
+                    console.log(resp);
+                    res.json(resp);
                 })
                 .catch(err => res.json(err))
             

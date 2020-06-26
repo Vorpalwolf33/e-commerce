@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import '../../styles/navbar.css';
 import {Route, Switch} from 'react-router-dom';
 import {logoutUser} from '../../config/actions/userActions';
@@ -13,10 +13,16 @@ const GuestNavbar = (props) => {
 }
 
 const CustomerNavbar = (props) => {
+    const [searchTerm, setSearchTerm] = useState('');
     return (
         <div>
+            <button onClick={() => props.history.push('/account/home')}>Home</button>
             <button>Profile</button>
             <button onClick={() => props.dispatch(logoutUser(props.history.push))}>Logout</button>
+            <form onSubmit={(event) => {event.preventDefault();}}>
+                <input type="text" value={searchTerm} onChange={(event) => setSearchTerm(event.target.value)}/>
+                <input type="submit" value="Search"/>
+            </form>
         </div>
     )
 }

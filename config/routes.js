@@ -20,9 +20,10 @@ routes.post('/account/category/update', authoriseUser, categoryControllers.updat
 routes.get('/account/categories', authenticateUser, categoryControllers.list);
 routes.post('/account/category/remove', authenticateUser, categoryControllers.remove);
 routes.get('/account/productsList', authoriseUser, productControllers.list);
-routes.get('/homePageProducts', productControllers.homeList);
-routes.get('/product/:id', productControllers.show);
 routes.post('/account/orders/add', authenticateUser, orderControllers.add);
+routes.get('/homePageProducts', productControllers.homeList);
+routes.get('/account/homePageProducts', authenticateUser, productControllers.homeList);
+routes.get('/product/:id', productControllers.show);
 routes.post('/account/cart/add', authenticateUser, userControllers.addToCart);
 
 module.exports = routes;

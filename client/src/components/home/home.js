@@ -18,7 +18,7 @@ class Home extends React.Component{
             this.props.dispatch(setToken(token));
             this.props.dispatch(loadUserDetails(this.props.history.push))
         } 
-        if(this.props.homePageProducts.length === 0 && !token) {
+        else {
             this.props.dispatch(loadHomePageProducts());
         }
 
@@ -38,7 +38,7 @@ class Home extends React.Component{
                                     row.products.map( (product, ind) => {
                                         return (
                                             <div key={ind}>
-                                                {product}
+                                                {product.name}
                                             </div>
                                         )
                                     })
