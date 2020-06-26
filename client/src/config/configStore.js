@@ -8,6 +8,8 @@ import HPPR from './reducers/homePageProductsReducer';
 import productReducer from './reducers/productReducer';
 import productListReducer from './reducers/productListReducer';
 import categoriesReducer from './reducers/categoryReducer';
+import cartReducer from './reducers/cartReducer';
+import cartProductsReducer from './reducers/cartProductsReducer';
 
 export default () => {
     const store = createStore(combineReducers({
@@ -17,7 +19,9 @@ export default () => {
         homePageProducts: HPPR,
         product: productReducer,
         productsList: productListReducer,
-        categories: categoriesReducer
+        categories: categoriesReducer,
+        cart: cartReducer,
+        cartProducts: cartProductsReducer
     }), applyMiddleware(thunk));
     return store; 
 }

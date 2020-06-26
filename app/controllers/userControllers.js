@@ -54,11 +54,48 @@ module.exports.logout = (req, res) => {
 module.exports.addToCart = (req, res) => {
     const user = req.user;
     const filter = {_id: user._id};
-    user.cart.push(req.body.product_id);
-    const update = {cart: user.cart};
-    User.findOneAndUpdate(filter, update)
-        .then(response => {
-            console.log(response);
-        })    
-        .catch(err => console.log(err))
+    
+    if(!user.cart.includes(req.body.product_id)) {
+        user.cart.push(req.body.product_id);
+        const update = {cart: user.cart};
+        User.findOneAndUpdate(filter, update, {new: true})
+            .then(updatedUser => {
+                if(updatedUser) {
+                    res.json({success: true});
+                }
+            })    
+            .catch(err => console.log(err))
+    }
+    else { res.json({size: user.cart.length});}
+}
+
+module.exports.showCart = (req, res) => {
+    const user = req.user;
+    res.json(user.cart);
+}
+
+module.exports.removeFromCart = (req, res) => {
+    const user = req.user;
+    let cart = user.cart;
+    cart = cart.filter( item => item != req.body.id);
+    User.findOneAndUpdate({_id: user._id}, {cart}, {new: true})
+        .then( updatedUser => {
+            if(updatedUser) {
+                res.json({success: true});
+            }
+            else res.json({success: false})
+        })
+        .catch(err => res.json(err))
+}
+
+module.exports.list = (req, res) => {
+    const user = req.user;
+    user.populate('cart').execPopulate()
+        .then( populatedUser => {
+            if(populatedUser) {
+                res.json(populatedUser.cart);
+            }
+        })
+        .catch(err =>console.log(err))
+
 }

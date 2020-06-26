@@ -36,7 +36,6 @@ module.exports.homeList = (req, res) => {
                                 products: categoryProds
                             })
                     })
-                    console.log(resp);
                     res.json(resp);
                 })
                 .catch(err => res.json(err))

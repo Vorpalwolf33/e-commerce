@@ -25,5 +25,8 @@ routes.get('/homePageProducts', productControllers.homeList);
 routes.get('/account/homePageProducts', authenticateUser, productControllers.homeList);
 routes.get('/product/:id', productControllers.show);
 routes.post('/account/cart/add', authenticateUser, userControllers.addToCart);
+routes.get('/account/cart', authenticateUser, userControllers.showCart);
+routes.post('/account/cart/remove', authenticateUser, userControllers.removeFromCart);
+routes.get('/account/cart/list', authenticateUser, userControllers.list);
 
 module.exports = routes;

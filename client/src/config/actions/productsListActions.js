@@ -6,7 +6,7 @@ export const loadProductsList = () => {
         Axios.get('/account/productsList', {headers: {"x-auth": token}})
             .then( response => {
                 const data = response.data;
-                if(data && data != getState().productsList) {
+                if(data && data !== getState().productsList) {
                     dispatch(setProductsList(data));
                 }
             })

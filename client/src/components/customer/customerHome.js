@@ -3,33 +3,46 @@ import {connect} from 'react-redux';
 import {Route, Switch} from 'react-router-dom';
 
 import Navbar from '../common/navbar';
+import Sidebar from '../common/sidebar';
 import CustomerPageProducts from './customerComponents/customerPageProducts';
 import ShowProduct from '../common/showProduct';
+import Cart from '../common/cart';
 
 import {loadHomePageProducts} from '../../config/actions/homePageProductsActions';
+import {setToken} from '../../config/actions/tokenActions';
+import {loadCart} from '../../config/actions/cartActions';
 
 const CustomerHome = (props) => {
     const [isNew, setisNew] = useState(true);
     useEffect( () => {
-        if(isNew) {
-            props.dispatch(loadHomePageProducts());
+        if(!props.token && localStorage.getItem('token')) {
+            props.dispatch(setToken(localStorage.getItem('token')));
         }
-        setisNew(false);
-    }, [props, setisNew])
+        if(!props.token && !localStorage.getItem('token')) {
+            props.history.push('/');
+        }
+        if(isNew) {
+            props.dispatch(loadCart());
+            props.dispatch(loadHomePageProducts());
+            setisNew(false);
+        }
+    }, [props, setisNew, isNew])
     return (
         <div>
             <Navbar />
-            
+            {(window.location.pathname === "/account/search")?<Sidebar />: null}
             <Switch>
                 <Route path="/account/home" component={CustomerPageProducts} exact={true}/>
                 <Route path="/account/product/:id" component={ShowProduct} />
+                <Route path="/account/cart" component={Cart} exact={true}/>
             </Switch>
         </div>
     )
 }
 
 const mapStateToProps = (state) => {
-    return state;
+    const {homePageProducts, token} = state;
+    return {homePageProducts, token};
 }
 
 export default connect(mapStateToProps)(CustomerHome);

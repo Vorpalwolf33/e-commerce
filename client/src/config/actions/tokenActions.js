@@ -1,11 +1,9 @@
-export const saveToken = () => {
-    return (dispatch, getState) => {
-        localStorage.setItem("token", JSON.stringify(getState().token) );
-    }
+export const saveToken = (token) => {
+    localStorage.setItem("token", token );
 }
 
 export const setToken = (token) => {
-    localStorage.setItem("token", token );
+    saveToken(token);
     return {
         type: "SET_TOKEN",
         payload: token
@@ -18,6 +16,7 @@ export const resetToken = () => {
 }
 
 export const loadTokenFromLocalDevice = () => {
-    const token = JSON.parse(localStorage.getItem('token')).token;
+    const token = localStorage.getItem('token').token;
+    console.log(token);
     return setToken(token);
 }

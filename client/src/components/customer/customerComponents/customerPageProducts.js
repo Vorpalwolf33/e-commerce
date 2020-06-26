@@ -1,8 +1,6 @@
 import React from 'react';
 import {connect} from 'react-redux';
 
-import {setProduct} from '../../../config/actions/productActions';
-
 const CustomerPageProducts = (props) => {
     return (
         <div>
@@ -10,16 +8,22 @@ const CustomerPageProducts = (props) => {
             props.homePageProducts.map( (row, index) => {
                 return (
                     <div key = {index}>
+                        <hr/>
                         <h3>{row.type}</h3>
+                        <br/>
                         {
                             row.products.map( (product, ind) => {
                                 return (
                                     <div key={ind} onClick={() => {props.history.push(`/account/product/${product._id}`);}}>
                                         {product.name}
+                                        <br/>
+                                        Price: ${product.price}
+                                        <br/><br/>
                                     </div>
                                 )
                             })
                         }
+                        <hr/>
                     </div>
                 )
             })

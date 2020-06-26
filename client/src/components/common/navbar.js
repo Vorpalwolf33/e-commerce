@@ -4,6 +4,10 @@ import {Route, Switch} from 'react-router-dom';
 import {logoutUser} from '../../config/actions/userActions';
 import {connect} from 'react-redux';
 
+const mapStateToProps = (state) => {
+    return state;
+}
+
 const GuestNavbar = (props) => {
     return (
         <div>
@@ -16,13 +20,17 @@ const CustomerNavbar = (props) => {
     const [searchTerm, setSearchTerm] = useState('');
     return (
         <div>
-            <button onClick={() => props.history.push('/account/home')}>Home</button>
-            <button>Profile</button>
-            <button onClick={() => props.dispatch(logoutUser(props.history.push))}>Logout</button>
             <form onSubmit={(event) => {event.preventDefault();}}>
                 <input type="text" value={searchTerm} onChange={(event) => setSearchTerm(event.target.value)}/>
                 <input type="submit" value="Search"/>
             </form>
+            <button onClick={() => props.history.push('/account/home')}>Home</button>
+            <button>Profile</button>
+            <button onClick={() => props.dispatch(logoutUser(props.history.push))}>Logout</button>
+            <button onClick={() => props.history.push('/account/cart')}>
+                Cart
+                {(props.cart && props.cart.length > 0)?` (${props.cart.length})`:null}
+            </button>
         </div>
     )
 }
@@ -41,7 +49,7 @@ export default (props) => {
         <div>
             Navbar:
             <Switch>
-                <Route path="/account" component={connect()(CustomerNavbar)} />
+                <Route path="/account" component={connect(mapStateToProps)(CustomerNavbar)} />
                 <Route path="/admin" component={connect()(AdminNavbar)} />
                 <Route path="/" component={connect()(GuestNavbar)}/>
             </Switch>

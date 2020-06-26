@@ -41,7 +41,7 @@ export const removeCategory = (category) => {
             .then( response => {
                 if(response.data.status) {
                     let state = getState().categories;
-                    state = state.filter( cat => category._id != cat._id);
+                    state = state.filter( cat => category._id !== cat._id);
                     dispatch(setCategories(state));
                 }
             })
