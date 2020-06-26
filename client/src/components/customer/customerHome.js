@@ -7,10 +7,12 @@ import Sidebar from '../common/sidebar';
 import CustomerPageProducts from './customerComponents/customerPageProducts';
 import ShowProduct from '../common/showProduct';
 import Cart from '../common/cart';
+import Wallet from './customerComponents/wallet';
 
 import {loadHomePageProducts} from '../../config/actions/homePageProductsActions';
 import {setToken} from '../../config/actions/tokenActions';
 import {loadCart} from '../../config/actions/cartActions';
+import {loadUserDetails} from '../../config/actions/userActions';
 
 const CustomerHome = (props) => {
     const [isNew, setisNew] = useState(true);
@@ -20,6 +22,9 @@ const CustomerHome = (props) => {
         }
         if(!props.token && !localStorage.getItem('token')) {
             props.history.push('/');
+        }
+        if(props.token && !props.user) {
+            props.dispatch(loadUserDetails());
         }
         if(isNew) {
             props.dispatch(loadCart());
@@ -35,6 +40,7 @@ const CustomerHome = (props) => {
                 <Route path="/account/home" component={CustomerPageProducts} exact={true}/>
                 <Route path="/account/product/:id" component={ShowProduct} />
                 <Route path="/account/cart" component={Cart} exact={true}/>
+                <Route path="/account/wallet" component={Wallet} exact={true} />
             </Switch>
         </div>
     )

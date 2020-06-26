@@ -35,6 +35,7 @@ module.exports.home = (req, res) => {
     const token = req.headers['x-auth'];
     const user = (req.user.role) ? {role: req.user.role} : {role: "Customer"};
     user.username = req.user.username;
+    user.wallet = req.user.wallet;
     res.json(user);
 }
 
@@ -97,5 +98,17 @@ module.exports.list = (req, res) => {
             }
         })
         .catch(err =>console.log(err))
+}
 
+module.exports.addMoneyToWallet = (req, res) => {
+    const user = req.user;
+    user.wallet += req.body.money;
+    user.save()
+        .then( updatedUser => {
+            if(updatedUser) {
+                res.json({success: true});
+            }
+            res.json({success: false});
+        })
+        .catch(err => res.json(err))
 }

@@ -18,6 +18,7 @@ const GuestNavbar = (props) => {
 
 const CustomerNavbar = (props) => {
     const [searchTerm, setSearchTerm] = useState('');
+    const [profileOptions, setProfileOptions] = useState(false);
     return (
         <div>
             <form onSubmit={(event) => {event.preventDefault();}}>
@@ -25,7 +26,16 @@ const CustomerNavbar = (props) => {
                 <input type="submit" value="Search"/>
             </form>
             <button onClick={() => props.history.push('/account/home')}>Home</button>
-            <button>Profile</button>
+            <button onClick={() => setProfileOptions(!profileOptions)}>Profile</button>
+            {
+                (profileOptions)? (
+                    <div>
+                        <button>My Profile</button>
+                        <button>My Orders</button>
+                        <button onClick={() => props.history.push('/account/wallet')}>Wallet</button>
+                    </div>
+                ): null
+            }
             <button onClick={() => props.dispatch(logoutUser(props.history.push))}>Logout</button>
             <button onClick={() => props.history.push('/account/cart')}>
                 Cart

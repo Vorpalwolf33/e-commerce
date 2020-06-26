@@ -76,7 +76,11 @@ const userSchema = new Schema({
             type: Schema.Types.ObjectId,
             ref: "Product"
         }
-    ]
+    ],
+    wallet: {
+        type: Number,
+        default: 0
+    }
 });
 
 userSchema.pre('save', function(next){

@@ -41,16 +41,18 @@ export const loadUserDetails = (redirect) => {
             .then( response => {
                 const user = response.data;
                 dispatch(setUser(user));
-                switch(user.role) {
-                    case "Admin":
-                        redirect("/admin/dashboard");
-                        break;
-                    case "Customer":
-                        redirect("/account/home");
-                        break;
-                    default:
-                        redirect("/login");
-                        break;
+                if(!window.location.pathname.includes("admin") && !window.location.pathname.includes("account")) {
+                    switch(user.role) {
+                        case "Admin":
+                            redirect("/admin/dashboard");
+                            break;
+                        case "Customer":
+                            redirect("/account/home");
+                            break;
+                        default:
+                            redirect("/login");
+                            break;
+                    }
                 }
             })
             .catch(err => console.log(err))
