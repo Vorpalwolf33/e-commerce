@@ -54,17 +54,15 @@ module.exports.logout = (req, res) => {
 
 module.exports.addToCart = (req, res) => {
     const user = req.user;
-    const filter = {_id: user._id};
-    
-    if(!user.cart.includes(req.body.product_id)) {
-        user.cart.push(req.body.product_id);
-        const update = {cart: user.cart};
-        User.findOneAndUpdate(filter, update, {new: true})
-            .then(updatedUser => {
+    if(user.cart.filter( (item) => item.product == req.body.cartItem.product).length === 0) {
+        console.log('adding to cart in backend');
+        user.cart.push(req.body.cartItem);
+        user.save()
+            .then( updatedUser => {
                 if(updatedUser) {
-                    res.json({success: true});
+                    res.json({success: true})
                 }
-            })    
+            })
             .catch(err => console.log(err))
     }
     else { res.json({size: user.cart.length});}
@@ -77,9 +75,13 @@ module.exports.showCart = (req, res) => {
 
 module.exports.removeFromCart = (req, res) => {
     const user = req.user;
-    let cart = user.cart;
-    cart = cart.filter( item => item != req.body.id);
-    User.findOneAndUpdate({_id: user._id}, {cart}, {new: true})
+    console.log(user.cart);
+    user.cart = user.cart.filter( item => {
+        console.log(item.product + " : " + req.body.id);
+        return item.product != req.body.id
+    });
+    console.log(user.cart);
+    user.save()
         .then( updatedUser => {
             if(updatedUser) {
                 res.json({success: true});
@@ -91,7 +93,7 @@ module.exports.removeFromCart = (req, res) => {
 
 module.exports.list = (req, res) => {
     const user = req.user;
-    user.populate('cart').execPopulate()
+    user.populate('cart.product').execPopulate()
         .then( populatedUser => {
             if(populatedUser) {
                 res.json(populatedUser.cart);
@@ -109,6 +111,19 @@ module.exports.addMoneyToWallet = (req, res) => {
                 res.json({success: true});
             }
             res.json({success: false});
+        })
+        .catch(err => res.json(err))
+}
+
+module.exports.changeQuantity = (req, res) => {
+    const user = req.user;
+    user.cart[user.cart.findIndex((cartItem) => cartItem._id == req.body.cart_id)].quantity = req.body.quantity;
+    user.save()
+        .then( updatedUser => {
+            if(updatedUser) {
+                res.json({success: true, quantity: req.body.quantity})
+            }
+            else res.json({success: false})
         })
         .catch(err => res.json(err))
 }

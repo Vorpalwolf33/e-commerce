@@ -1,7 +1,7 @@
 import React, {useState, useEffect} from 'react';
 import {connect} from 'react-redux';
 
-import {loadCartProducts} from '../../config/actions/cartProductsActions';
+import {loadCartProducts, changeProductQuantity} from '../../config/actions/cartProductsActions';
 import {removeFromCart} from '../../config/actions/cartActions';
 
 const Cart = (props) => {
@@ -16,7 +16,7 @@ const Cart = (props) => {
         if(props.cartProducts && cartLength !== props.cartProducts) {
             setCartLength(props.cartProducts.length)
             let temp = 0;
-            props.cartProducts.forEach( product => temp += product.price)
+            props.cartProducts.forEach( item => temp += (item.product.price * item.quantity))
             setTotal(temp);
         }
     }, [props, setisNew, isNew, total, setTotal, cartLength, setCartLength])
@@ -24,14 +24,23 @@ const Cart = (props) => {
         <div>
             <h3>Listing Products:</h3><hr/>
             {
-                props.cartProducts.map( (product, index) => {
+                props.cartProducts.map( (cartItem, index) => {
                     return (
                         <div key={index}>
-                            <h4>{product.name}</h4>
+                            <h4>{cartItem.product.name}</h4>
                             <div>
-                                Price: {product.price}
+                                Price: {cartItem.product.price}
                             </div>
-                            <button onClick={() => {props.dispatch(removeFromCart(product._id));}}>
+                            <div>
+                                {"Quantity: "}
+                                <button onClick={() => {props.dispatch(changeProductQuantity(cartItem.quantity - 1, cartItem._id))}} disabled={cartItem.quantity <= 1}>-</button>
+                                {` ${cartItem.quantity} `}
+                                <button onClick={() => {props.dispatch(changeProductQuantity(cartItem.quantity + 1, cartItem._id))}}>+</button>
+                            </div>
+                            <div>
+                                {`Subtotal: ${cartItem.product.price * cartItem.quantity}`}
+                            </div>
+                            <button onClick={() => {props.dispatch(removeFromCart(cartItem.product._id));}}>
                                 Remove From Cart
                             </button>
 

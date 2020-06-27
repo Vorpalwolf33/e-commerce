@@ -21,3 +21,20 @@ export const loadCartProducts = () => {
             .catch(err => console.log(err))
     }
 }
+
+export const changeProductQuantity = (quantity, cart_id) => {
+    return (dispatch, getState) => {
+        if(quantity > 0) {
+            Axios.post('/account/cart/quantity/change', {quantity, cart_id}, {headers: {"x-auth": getState().token}})
+                .then( response => {
+                    const {data} = response;
+                    if(data.success) {
+                        const cartProducts = [...getState().cartProducts];
+                        cartProducts[cartProducts.findIndex((cartItem) => cartItem._id === cart_id)].quantity = quantity;
+                        dispatch(setCartProducts(cartProducts));
+                    }
+                })
+                .catch(err => console.log(err))
+        }
+    }
+}

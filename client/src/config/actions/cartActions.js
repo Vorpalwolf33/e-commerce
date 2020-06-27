@@ -2,13 +2,13 @@ import Axios from '../configAxios';
 
 import {setCartProducts} from './cartProductsActions';
 
-export const addToCart = (id) => {
+export const addToCart = (cartItem) => {
     return (dispatch, getState) => {
-        Axios.post("/account/cart/add", {product_id: id}, {headers: {"x-auth": getState().token}})
+        Axios.post("/account/cart/add", {cartItem}, {headers: {"x-auth": getState().token}})
             .then( response => {
                 const data = response.data;
                 if(data.success) {
-                    dispatch(setCart([...getState().cart, id]));
+                    dispatch(setCart([...getState().cart, cartItem]));
                 }
             })
             .catch(err => console.log(err))
@@ -22,11 +22,11 @@ export const removeFromCart = (id) => {
                 const data = response.data;
                 if(data.success) {
                     let cart = getState().cart;
-                    cart = cart.filter( (productId) => productId !== id)
+                    cart = cart.filter( (item) => item.product !== id)
                     dispatch(setCart(cart));
                     let cartProducts = getState().cartProducts;
                     if(cartProducts) {
-                        cartProducts = cartProducts.filter( product => product._id !== id)
+                        cartProducts = cartProducts.filter( item => item.product._id !== id)
                         dispatch(setCartProducts(cartProducts));
                     }
                 }

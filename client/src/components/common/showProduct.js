@@ -7,26 +7,35 @@ import {addToCart, removeFromCart} from '../../config/actions/cartActions';
 const ShowProduct = (props) => {
     const [isNew, setisNew] = useState(true);
     const [isInCart, setIsInCart] = useState(false);
+    const [quantity, setQuantity] = useState(1);
     useEffect( () => {
         if(isNew) {
             props.dispatch(loadProduct(props.match.params.id));
             setisNew(false);
         }
-        if(props.cart && props.cart.includes(props.match.params.id))
+        if(props.cart && props.cart.filter((item) => item.product === props.match.params.id).length > 0) {
             setIsInCart(true);
-        if(props.cart && !props.cart.includes(props.match.params.id)) 
+        }
+        if(props.cart && props.cart.filter((item) => item.product === props.match.params.id).length === 0) {
             setIsInCart(false);
-    }, [props, isNew, setisNew])
+        }  
+    }, [props, isNew, setisNew, isInCart, setIsInCart])
 
     return (props.product)? (
             <div>
                 <h4>{props.product.name}</h4>
                 <div>Price: ${props.product.price}</div>
                 <div>
+                    {"Quantity: "}
+                    <button onClick={() => setQuantity(quantity - 1)}>-</button>
+                    {` ${quantity} `}
+                    <button onClick={() => setQuantity(quantity + 1)}>+</button>
+                </div>
+                <div>
                     <button>Buy</button>
                     {
                         (!isInCart)? (
-                                <button onClick={() => {props.dispatch(addToCart(props.product._id))}}>
+                                <button onClick={() => {props.dispatch(addToCart({product: props.product._id, quantity}))}}>
                                     Add To Cart
                                 </button>
                             ): (
