@@ -1,7 +1,5 @@
 import Axios from '../configAxios';
 
-import {setCartProducts} from './cartProductsActions';
-
 export const addToCart = (cartItem) => {
     return (dispatch, getState) => {
         Axios.post("/account/cart/add", {cartItem}, {headers: {"x-auth": getState().token}})
@@ -21,14 +19,9 @@ export const removeFromCart = (id) => {
             .then( response => {
                 const data = response.data;
                 if(data.success) {
-                    let cart = getState().cart;
-                    cart = cart.filter( (item) => item.product !== id)
+                    let cart = [...getState().cart];
+                    cart = cart.filter( (item) => item.product._id !== id && item.product !== id)
                     dispatch(setCart(cart));
-                    let cartProducts = getState().cartProducts;
-                    if(cartProducts) {
-                        cartProducts = cartProducts.filter( item => item.product._id !== id)
-                        dispatch(setCartProducts(cartProducts));
-                    }
                 }
             })
             .catch(err => console.log(err))
@@ -45,6 +38,38 @@ export const loadCart = () => {
                 }
             })
             .catch(err => console.log(err))
+    }
+}
+
+export const loadCartProducts = (setCartLoaded) => {
+    return (dispatch, getState) => {
+        Axios.get('/account/cart/list', {headers: {"x-auth": getState().token}})
+            .then( response => {
+                const data = response.data;
+                if(data) {
+                    console.log('updating the cart');
+                    setCartLoaded(true);
+                    dispatch(setCart(data));
+                }
+            })
+            .catch(err => console.log(err))
+    }
+}
+
+export const changeProductQuantity = (quantity, cart_id) => {
+    return (dispatch, getState) => {
+        if(quantity > 0) {
+            Axios.post('/account/cart/quantity/change', {quantity, cart_id}, {headers: {"x-auth": getState().token}})
+                .then( response => {
+                    const {data} = response;
+                    if(data.success) {
+                        const cart = [...getState().cart];
+                        cart[cart.findIndex((cartItem) => cartItem._id === cart_id)].quantity = quantity;
+                        dispatch(setCart(cart));
+                    }
+                })
+                .catch(err => console.log(err))
+        }
     }
 }
 

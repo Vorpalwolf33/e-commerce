@@ -26,16 +26,26 @@ module.exports.list = (req, res) => {
 
 module.exports.cancel = (req, res) => {
     const orderId = req.body.id;
-    Order.findOneAndDelete({_id: orderId})
-        .then( deletedOrder => {
-            if(deletedOrder) {
-                res.json({success: true});
+    Order.findOne({_id: orderId})
+        .then( order => {
+            if(order && order.status !== "Delivered") {
+                req.user.wallet += order.total;
+                return req.user.save();
             }
-            else {
-                res.json({success: false});
-            }
+            else {return Promise.reject({success: false})}
         })
-        .catch( err => res.json(err))
+        .then( updatedUser => {
+            console.log(updatedUser);
+            if(updatedUser) {
+                return Order.findOneAndDelete({_id: orderId})
+            }
+            else return Promise.reject({success: false})
+        })
+        .then( deletedOrder => {
+            if(deletedOrder) res.json({success: true});
+            else res.json({success: false});
+        })
+        .catch(err => res.json(err))
 }
 
 module.exports.cartOrder = (req, res) => {
@@ -47,6 +57,9 @@ module.exports.cartOrder = (req, res) => {
                 order.save()
                 .then( savedOrder => {
                     if(savedOrder && savedOrder.status === "Order Placed") {
+                        let total = 0;
+                        populatedUser.cart.forEach( item => total += item.product.price * item.quantity);
+                        populatedUser.wallet -= total
                         populatedUser.cart = []
                         populatedUser.save()
                             .then( updatedUser => {

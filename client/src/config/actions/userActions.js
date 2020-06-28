@@ -72,3 +72,17 @@ export const logoutUser = (redirect) => {
             .catch( err => console.log(err))
     }
 }
+
+export const addMoney = (money) => {
+    return (dispatch, getState) => {
+        Axios.post('/account/wallet/addMoney', {money}, {headers: {"x-auth": getState().token}})
+            .then( response => {
+                if(response.data && response.data.success) {
+                    const user = {...getState().user};
+                    user.wallet += money;
+                    dispatch(setUser(user));    
+                }
+            })
+            .catch()
+    }
+}

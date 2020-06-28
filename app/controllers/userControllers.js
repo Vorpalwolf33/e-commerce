@@ -55,7 +55,6 @@ module.exports.logout = (req, res) => {
 module.exports.addToCart = (req, res) => {
     const user = req.user;
     if(user.cart.filter( (item) => item.product == req.body.cartItem.product).length === 0) {
-        console.log('adding to cart in backend');
         user.cart.push(req.body.cartItem);
         user.save()
             .then( updatedUser => {
@@ -75,12 +74,9 @@ module.exports.showCart = (req, res) => {
 
 module.exports.removeFromCart = (req, res) => {
     const user = req.user;
-    console.log(user.cart);
     user.cart = user.cart.filter( item => {
-        console.log(item.product + " : " + req.body.id);
         return item.product != req.body.id
     });
-    console.log(user.cart);
     user.save()
         .then( updatedUser => {
             if(updatedUser) {
@@ -110,7 +106,9 @@ module.exports.addMoneyToWallet = (req, res) => {
             if(updatedUser) {
                 res.json({success: true});
             }
-            res.json({success: false});
+            else {
+                res.json({success: false});
+            }
         })
         .catch(err => res.json(err))
 }

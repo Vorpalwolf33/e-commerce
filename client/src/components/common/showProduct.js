@@ -28,7 +28,7 @@ const ShowProduct = (props) => {
                 <div>Price: ${props.product.price}</div>
                 <div>
                     {"Quantity: "}
-                    <button onClick={() => setQuantity(quantity - 1)}>-</button>
+                    <button onClick={() => setQuantity(quantity - 1)} disabled={quantity <= 1}>-</button>
                     {` ${quantity} `}
                     <button onClick={() => setQuantity(quantity + 1)}>+</button>
                 </div>

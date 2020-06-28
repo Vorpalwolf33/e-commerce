@@ -1,7 +1,6 @@
 import Axios from '../configAxios';
 
 import {resetCart} from './cartActions';
-import {resetCartProducts} from './cartProductsActions'
 
 export const setOrders = (orders) => {
     return {
@@ -60,7 +59,6 @@ export const orderFromCart = (redirect) => {
                 const data = response.data;
                 if(data.success && data.cartCleared) {
                     dispatch(resetCart());
-                    dispatch(resetCartProducts());
                     redirect("/account/order");
                 }
                 if(data.success && !data.cartCleared) {
@@ -68,7 +66,6 @@ export const orderFromCart = (redirect) => {
                         .then( resp => {
                             if(resp && resp.success) {
                                 dispatch(resetCart());
-                                dispatch(resetCartProducts());
                                 redirect("/account/order");
                             }
                             else console.log("couldn't clear the cart")

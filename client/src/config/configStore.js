@@ -9,7 +9,6 @@ import productReducer from './reducers/productReducer';
 import productListReducer from './reducers/productListReducer';
 import categoriesReducer from './reducers/categoryReducer';
 import cartReducer from './reducers/cartReducer';
-import cartProductsReducer from './reducers/cartProductsReducer';
 import ordersReducer from './reducers/orderReducer';
 
 export default () => {
@@ -22,7 +21,6 @@ export default () => {
         productsList: productListReducer,
         categories: categoriesReducer,
         cart: cartReducer,
-        cartProducts: cartProductsReducer,
         orders: ordersReducer
     }), applyMiddleware(thunk));
     return store; 

@@ -1,31 +1,31 @@
 import React, {useState, useEffect} from 'react';
 import {connect} from 'react-redux';
 
-import {loadCartProducts, changeProductQuantity} from '../../config/actions/cartProductsActions';
-import {removeFromCart} from '../../config/actions/cartActions';
+import {removeFromCart, loadCartProducts, changeProductQuantity} from '../../config/actions/cartActions';
 import {orderFromCart} from '../../config/actions/ordersActions';
 
 const Cart = (props) => {
     const [isNew, setisNew] = useState(true);
     const [total, setTotal] = useState(0);
-    const [cartLength, setCartLength]= useState(0);
+    const [cartLoaded, setCartLoaded]= useState(false);
     useEffect( () => {
         if(isNew && props.token) {
-            props.dispatch(loadCartProducts());
+            props.dispatch(loadCartProducts(setCartLoaded));
+            console.log(props.cartProducts);
             setisNew(false);
+            
         }
-        if(props.cartProducts && cartLength !== props.cartProducts) {
-            setCartLength(props.cartProducts.length)
+        if(cartLoaded) {
             let temp = 0;
-            props.cartProducts.forEach( item => temp += (item.product.price * item.quantity))
+            props.cart.forEach( item => temp += (item.product.price * item.quantity))
             setTotal(temp);
         }
-    }, [props, setisNew, isNew, total, setTotal, cartLength, setCartLength])
-    return (props.cartProducts)? (
+    }, [props, setisNew, isNew, total, setTotal, cartLoaded, setCartLoaded])
+    return (props.cart)? (
         <div>
             <h3>Listing Products:</h3><hr/>
             {
-                props.cartProducts.map( (cartItem, index) => {
+                props.cart.map( (cartItem, index) => {
                     return (
                         <div key={index}>
                             <h4>{cartItem.product.name}</h4>
@@ -53,11 +53,20 @@ const Cart = (props) => {
             <br/>
         <h4>Total: ${total}</h4>
         {
-            (props.cartProducts)? (
+            (props.cart)? (
                 <button onClick={() => {
-                    props.dispatch(
-                        orderFromCart(props.history.push)
-                    )
+                    if(total && props.user.wallet > total) {
+                        if(window.confirm(`
+                        Wallet:      ${props.user.wallet}
+                        Cost:       -${total}
+                    __________________________
+                        Balance:    ${props.user.wallet - total}\n
+                        Are you sure:`)) {
+                            props.dispatch(
+                                orderFromCart(props.history.push)
+                            )
+                        }
+                    }
                 }}>
                     Order
                 </button>
@@ -68,8 +77,8 @@ const Cart = (props) => {
 }
 
 const mapStateToProps = (state) => {
-    const {cartProducts, token} = state;
-    return {cartProducts, token};
+    const {cart, token, user} = state;
+    return {cart, token, user};
 }
 
 export default connect(mapStateToProps)(Cart);
