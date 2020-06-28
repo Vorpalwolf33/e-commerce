@@ -11,7 +11,6 @@ const Cart = (props) => {
     useEffect( () => {
         if(isNew && props.token) {
             props.dispatch(loadCartProducts(setCartLoaded));
-            console.log(props.cartProducts);
             setisNew(false);
             
         }

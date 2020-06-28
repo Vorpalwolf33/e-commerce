@@ -47,7 +47,6 @@ export const loadCartProducts = (setCartLoaded) => {
             .then( response => {
                 const data = response.data;
                 if(data) {
-                    console.log('updating the cart');
                     setCartLoaded(true);
                     dispatch(setCart(data));
                 }

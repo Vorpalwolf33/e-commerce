@@ -53,6 +53,10 @@ const userSchema = new Schema({
                 type: String,
                 required: true
             },
+            country: {
+                type: String,
+                required: true
+            },
             locality: {
                 type: String,
                 required: true

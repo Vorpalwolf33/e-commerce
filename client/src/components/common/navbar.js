@@ -30,7 +30,7 @@ const CustomerNavbar = (props) => {
             {
                 (profileOptions)? (
                     <div>
-                        <button>My Profile</button>
+                        <button onClick={() => props.history.push('/account/profile')}>My Profile</button>
                         <button onClick={() => props.history.push('/account/order')}>My Orders</button>
                         <button onClick={() => props.history.push('/account/wallet')}>Wallet</button>
                     </div>

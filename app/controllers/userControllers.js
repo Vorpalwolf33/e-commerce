@@ -138,3 +138,56 @@ module.exports.clearCart = (req, res) => {
         })
         .catch(err => res.json(err))
 }
+
+module.exports.profile = (req, res) => {
+    const {username, role, email, address, mobile, wallet} = req.user;
+    res.json({username, role, email, address, mobile, wallet});
+}
+
+module.exports.addAddress = (req, res) => {
+    if(req.body.address) {
+        req.user.address.push(req.body.address);
+        req.user.save()
+            .then( updatedUser => {
+                if(updatedUser) {
+                    res.json({success: true, _id: updatedUser.address[updatedUser.address.length - 1]._id});
+                }
+                else res.json({success: false});
+            })
+            .catch(err => res.json(err))
+    }
+    else res.json({success: false});
+}
+
+module.exports.removeAddress = (req, res) => {
+    req.user.address = req.user.address.filter( ele => ele && ele._id && ele._id != req.body._id);
+    req.user.save()
+        .then( updatedUser => {
+            console.log(updatedUser);
+            if(updatedUser) {
+                res.json({success: true});
+            }
+            else res.json({success: false});
+        })
+        .catch(err => res.json(err))
+}
+
+module.exports.update = (req, res) => {
+    req.user.username = req.body.user.username;
+    req.user.email = req.body.user.email;
+    req.user.mobile = req.body.user.mobile;
+    req.body.user.address.forEach( (address, index) => {
+        for(let key in address) {
+            req.user.address[index][key] = address[key];
+        }
+    })
+    req.user.save()
+        .then( updatedUser => {
+            if(updatedUser) {
+                const {username, email, mobile, address, wallet, role} = updatedUser;
+                res.json({username, email, mobile, address, wallet, role})
+            }
+            else res.json("There was some error while updating the user")
+        })
+        .catch(err => res.json(err))
+}
