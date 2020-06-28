@@ -24,11 +24,16 @@ routes.post('/account/orders/add', authenticateUser, orderControllers.add);
 routes.get('/homePageProducts', productControllers.homeList);
 routes.get('/account/homePageProducts', authenticateUser, productControllers.homeList);
 routes.get('/product/:id', productControllers.show);
+routes.get('/accuont/cart/clear', authenticateUser, userControllers.clearCart);
 routes.post('/account/cart/add', authenticateUser, userControllers.addToCart);
 routes.get('/account/cart', authenticateUser, userControllers.showCart);
 routes.post('/account/cart/remove', authenticateUser, userControllers.removeFromCart);
 routes.get('/account/cart/list', authenticateUser, userControllers.list);
 routes.post('/account/cart/quantity/change', authenticateUser, userControllers.changeQuantity)
 routes.post('/account/wallet/addMoney', authenticateUser, userControllers.addMoneyToWallet);
+routes.post('/account/order/add', authenticateUser, orderControllers.add);
+routes.get('/account/order/cartOrder', authenticateUser, orderControllers.cartOrder);
+routes.get('/account/order/list', authenticateUser, orderControllers.list);
+routes.post('/account/order/cancel', authenticateUser, orderControllers.cancel);
 
 module.exports = routes;

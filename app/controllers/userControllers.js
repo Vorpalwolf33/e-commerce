@@ -127,3 +127,16 @@ module.exports.changeQuantity = (req, res) => {
         })
         .catch(err => res.json(err))
 }
+
+module.exports.clearCart = (req, res) => {
+    const user = req.user;
+    user.cart = [];
+    user.save()
+        .then(updatedUser => {
+            if(updatedUser && updatedUser.cart.length === 0) {
+                res.json({success: true})
+            }
+            else return Promise.reject({success: false});
+        })
+        .catch(err => res.json(err))
+}

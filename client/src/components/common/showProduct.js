@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 
 import {loadProduct} from '../../config/actions/productActions';
 import {addToCart, removeFromCart} from '../../config/actions/cartActions';
+import {placeOrder} from '../../config/actions/ordersActions';
 
 const ShowProduct = (props) => {
     const [isNew, setisNew] = useState(true);
@@ -32,7 +33,7 @@ const ShowProduct = (props) => {
                     <button onClick={() => setQuantity(quantity + 1)}>+</button>
                 </div>
                 <div>
-                    <button>Buy</button>
+                    <button disabled={!props.product.isAvailable} onClick={() => props.dispatch(placeOrder({product: props.product._id, quantity}, props.history.push))}>Buy</button>
                     {
                         (!isInCart)? (
                                 <button onClick={() => {props.dispatch(addToCart({product: props.product._id, quantity}))}}>

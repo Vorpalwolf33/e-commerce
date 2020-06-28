@@ -54,3 +54,5 @@ export const setCart = (cart) => {
         payload: cart
     }
 }
+
+export const resetCart = () => ({type: "RESET_CART"})

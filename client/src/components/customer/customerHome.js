@@ -8,6 +8,7 @@ import CustomerPageProducts from './customerComponents/customerPageProducts';
 import ShowProduct from '../common/showProduct';
 import Cart from '../common/cart';
 import Wallet from './customerComponents/wallet';
+import Order from './customerComponents/order';
 
 import {loadHomePageProducts} from '../../config/actions/homePageProductsActions';
 import {setToken} from '../../config/actions/tokenActions';
@@ -41,6 +42,7 @@ const CustomerHome = (props) => {
                 <Route path="/account/product/:id" component={ShowProduct} />
                 <Route path="/account/cart" component={Cart} exact={true}/>
                 <Route path="/account/wallet" component={Wallet} exact={true} />
+                <Route path="/account/order" component={Order} exact={true} />
             </Switch>
         </div>
     )

@@ -12,11 +12,16 @@ const orderSchema = new Schema({
     },
     total: {
         type: Number,
-        required: true
+        default: 0
+    },
+    // Let there be 4 status of orders( Order Placed, Shipped, Out for Deliver, Delivered)
+    status: {
+        type: String,
+        default: "Order Placed"
     },
     orderItems: [
         {
-            product_id: {
+            product: {
                 type: Schema.Types.ObjectId,
                 ref: 'Product',
                 required: true
@@ -27,6 +32,21 @@ const orderSchema = new Schema({
             }
         }
     ]
+})
+
+orderSchema.pre('save', function(next) {
+    const order = this
+    order.populate('orderItems.product').execPopulate()
+        .then( populatedOrder => {
+            let total = 0;
+            populatedOrder.orderItems.forEach( (item, index) => {
+                total += (item.product.price * item.quantity);
+                populatedOrder.orderItems[index].product = item.product._id;
+            });
+            populatedOrder.total = total;
+            next();
+        })
+        .catch(err => next(err))
 })
 
 const Order = mongoose.model('Order', orderSchema);

@@ -3,6 +3,7 @@ import {connect} from 'react-redux';
 
 import {loadCartProducts, changeProductQuantity} from '../../config/actions/cartProductsActions';
 import {removeFromCart} from '../../config/actions/cartActions';
+import {orderFromCart} from '../../config/actions/ordersActions';
 
 const Cart = (props) => {
     const [isNew, setisNew] = useState(true);
@@ -51,9 +52,17 @@ const Cart = (props) => {
             }
             <br/>
         <h4>Total: ${total}</h4>
-        <button>
-            Order
-        </button>
+        {
+            (props.cartProducts)? (
+                <button onClick={() => {
+                    props.dispatch(
+                        orderFromCart(props.history.push)
+                    )
+                }}>
+                    Order
+                </button>
+            ): null
+        }
         </div>
     ):<div></div>
 }
