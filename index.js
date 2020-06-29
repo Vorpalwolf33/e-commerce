@@ -1,3 +1,4 @@
+const path = require('path');
 const configDB = require('./config/configDB');
 const routes = require('./config/routes');
 const express = require('express');
@@ -14,4 +15,4 @@ app.use('/', routes);
 
 app.listen(PORT, () => {
     console.log('listening to port: ', PORT);
-});
+}); 

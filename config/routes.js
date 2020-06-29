@@ -24,10 +24,11 @@ routes.post('/account/category/update', authoriseUser, categoryControllers.updat
 routes.get('/account/categories', authenticateUser, categoryControllers.list);
 routes.post('/account/category/remove', authenticateUser, categoryControllers.remove);
 routes.get('/account/productsList', authoriseUser, productControllers.list);
-routes.post('/account/orders/add', authenticateUser, orderControllers.add);
+routes.post('/account/product/search', authenticateUser, productControllers.customerSearch);
+routes.post('/product/search', productControllers.guestSearch);
+routes.get('/product/:id', productControllers.show);
 routes.get('/homePageProducts', productControllers.homeList);
 routes.get('/account/homePageProducts', authenticateUser, productControllers.homeList);
-routes.get('/product/:id', productControllers.show);
 routes.get('/accuont/cart/clear', authenticateUser, userControllers.clearCart);
 routes.post('/account/cart/add', authenticateUser, userControllers.addToCart);
 routes.get('/account/cart', authenticateUser, userControllers.showCart);

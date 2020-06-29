@@ -87,3 +87,19 @@ module.exports.remove = (req, res) => {
         })
         .catch(err => res.json(err))
 }
+
+module.exports.customerSearch = (req, res) => {
+    const {searchTerm} = req.body;
+    Product.find({name: {$regex: searchTerm, $options: "i"}})
+        .then( searchedProducts => {
+            if(searchedProducts && searchedProducts.length > 0) {
+                res.json(searchedProducts);
+            }
+            else res.json({err: "Could not find any products"});
+        })
+        .catch( err => res.json(err))
+}
+
+module.exports.guestSearch = (req, res) => {
+
+}

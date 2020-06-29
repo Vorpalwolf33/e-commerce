@@ -5,7 +5,7 @@ import {Route, Switch, Link} from 'react-router-dom';
 const CustomerSidebar = (props) => {
     return (
         <div>
-            Filters
+            <h3>Filters: </h3>
         </div>
     )
 }

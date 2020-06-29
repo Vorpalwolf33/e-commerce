@@ -10,6 +10,7 @@ import Cart from '../common/cart';
 import Wallet from './customerComponents/wallet';
 import Order from './customerComponents/order';
 import Profile from './customerComponents/profile';
+import SearchedProducts from '../common/searchedProducts';
 
 import {loadHomePageProducts} from '../../config/actions/homePageProductsActions';
 import {setToken} from '../../config/actions/tokenActions';
@@ -37,15 +38,18 @@ const CustomerHome = (props) => {
     return (
         <div>
             <Navbar />
-            {(window.location.pathname === "/account/search")?<Sidebar />: null}
-            <Switch>
-                <Route path="/account/home" component={CustomerPageProducts} exact={true}/>
-                <Route path="/account/product/:id" component={ShowProduct} />
-                <Route path="/account/cart" component={Cart} exact={true}/>
-                <Route path="/account/wallet" component={Wallet} exact={true} />
-                <Route path="/account/order" component={Order} exact={true} />
-                <Route path="/account/profile" component={Profile} exact={true} />
-            </Switch>
+            <div>
+                {(window.location.pathname === "/account/search")?<Sidebar />: null}
+                <Switch>
+                    <Route path="/account/home" component={CustomerPageProducts} exact={true}/>
+                    <Route path="/account/product/:id" component={ShowProduct} />
+                    <Route path="/account/cart" component={Cart} exact={true}/>
+                    <Route path="/account/wallet" component={Wallet} exact={true} />
+                    <Route path="/account/order" component={Order} exact={true} />
+                    <Route path="/account/profile" component={Profile} exact={true} />
+                    <Route path="/account/search" component={SearchedProducts} exact={true} />
+                </Switch>
+            </div>
         </div>
     )
 }

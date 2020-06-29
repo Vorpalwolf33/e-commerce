@@ -22,3 +22,21 @@ export const setProductsList = (products) => {
 }
 
 export const resetProductsList = () => ({type: "RESET_PRODUCTS_LIST"})
+
+export const searchProducts = (searchTerm) => {
+    return (dispatch, getState) => {
+        Axios.post('/account/product/search', {searchTerm}, {headers: {"x-auth": getState().token}})
+            .then( response => {
+                if(response.data) {
+                    if(response.data.err) {
+                        dispatch(setProductsList([])) 
+                    }
+                    else {
+                        dispatch(setProductsList(response.data));
+                    }
+                }
+                else console.log("Unable to find your Product")
+            })
+            .catch( err => console.log(err))
+    }
+}

@@ -1,8 +1,9 @@
 import React, {useState} from 'react';
 import '../../styles/navbar.css';
 import {Route, Switch} from 'react-router-dom';
-import {logoutUser} from '../../config/actions/userActions';
 import {connect} from 'react-redux';
+
+import {logoutUser} from '../../config/actions/userActions';
 
 const mapStateToProps = (state) => {
     return state;
@@ -21,7 +22,16 @@ const CustomerNavbar = (props) => {
     const [profileOptions, setProfileOptions] = useState(false);
     return (
         <div>
-            <form onSubmit={(event) => {event.preventDefault();}}>
+            <form onSubmit={(event) => {
+                event.preventDefault(); 
+                if(props.match.path === '/account/search') {
+                    props.history.push(`/account/search?searchTerm=${searchTerm}`);
+                    window.location.reload();
+                }
+                else {
+                    props.history.push(`/account/search?searchTerm=${searchTerm}`);
+                }
+                }}>
                 <input type="text" value={searchTerm} onChange={(event) => setSearchTerm(event.target.value)}/>
                 <input type="submit" value="Search"/>
             </form>
