@@ -1,4 +1,6 @@
 const Order = require('../models/order');
+const Product = require('../models/product');
+const { findOneAndDelete } = require('../models/order');
 
 module.exports.add = (req, res) => {
     const userId = req.user._id;
@@ -7,8 +9,23 @@ module.exports.add = (req, res) => {
         .then( savedOrder => {
             if(savedOrder && savedOrder.status === "Order Placed") {
                 res.json({success: true});
+                return Promise.resolve(savedOrder);
             }
+            else return Promise.reject({message: "Order failed"})
 
+        })
+        .then( savedOrder => {
+            Product.findOne({_id: savedOrder.orderItems[0].product})
+                .then( foundProduct => {
+                    foundProduct.stock -= savedOrder.orderItems[0].quantity;
+                    foundProduct.save()
+                        .then( updatedProduct => {
+                            if(updatedProduct) {
+                                console.log("product stock reduced due to ordering\n Current Stock: ", updatedProduct.stock);
+                            }
+                        })
+                })
+                .catch(err => console.log(err))
         })
         .catch( err => res.json(err))
 }
@@ -35,11 +52,23 @@ module.exports.cancel = (req, res) => {
             else {return Promise.reject({success: false})}
         })
         .then( updatedUser => {
-            console.log(updatedUser);
             if(updatedUser) {
-                return Order.findOneAndDelete({_id: orderId})
+                return Order.findOne({_id: orderId})
             }
             else return Promise.reject({success: false})
+        })
+        .then( order => {
+            if(order) {
+                return order.populate('orderItems.product').execPopulate()
+            }
+            else return Promise.reject({success: false})
+        })
+        .then( populatedOrder => {
+            populatedOrder.orderItems.forEach( async item => {
+                item.product.stock += item.quantity;
+                await item.product.save()
+            })
+            return Order.findOneAndDelete({_id: populatedOrder._id})
         })
         .then( deletedOrder => {
             if(deletedOrder) res.json({success: true});
@@ -48,35 +77,44 @@ module.exports.cancel = (req, res) => {
         .catch(err => res.json(err))
 }
 
+
 module.exports.cartOrder = (req, res) => {
     const user = req.user;
     user.populate('cart.product').execPopulate()
         .then( populatedUser => {
             if(populatedUser) {
-                const order = new Order({userId: populatedUser._id, orderItems: populatedUser.cart})
-                order.save()
-                .then( savedOrder => {
-                    if(savedOrder && savedOrder.status === "Order Placed") {
-                        let total = 0;
-                        populatedUser.cart.forEach( item => total += item.product.price * item.quantity);
-                        populatedUser.wallet -= total
-                        populatedUser.cart = []
-                        populatedUser.save()
-                            .then( updatedUser => {
-                                if(updatedUser && updatedUser.cart.length === 0) {
-                                    res.json({success: true, cartCleared: true})
-                                }
-                                else res.json({success: true, cartCleared: false})
-                            })
-                            .catch(err => res.json({...err, success: true, cartCleared: false}))
-                    }
-        
+                const order = new Order({userId: populatedUser._id, orderItems: populatedUser.cart});
+                return order.save()
+            }
+            else return Promise.reject({success: false, error: "Problem with populating the user"});
+        })
+        .then( savedOrder => {
+            if(savedOrder) {
+                return savedOrder.populate('orderItems.product').execPopulate()                
+            }
+            else return Promise.reject({success: false, error: "Could not save the order"})
+        })
+        .then( populatedOrder => {
+            if(populatedOrder) {
+                populatedOrder.orderItems.forEach(async item => {
+                    item.product.stock -= item.quantity;
+                    await item.product.save()
                 })
-                .catch( err => res.json(err))
+                let total = 0;
+                populatedOrder.orderItems.forEach( item => {
+                    total += item.product.price * item.quantity;
+                })                
+                user.wallet -= total;
+                user.cart = [];
+                return user.save()
             }
-            else {
-                res.json({success: false})
+            else res.json({success: true, cartCleared: false});
+        })
+        .then( updatedUser => {
+            if(updatedUser) {
+                res.json({success: true, cartCleared: true})
             }
+            else res.json({success: true, cartCleared: false})
         })
         .catch( err => res.json(err))
 }

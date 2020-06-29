@@ -3,6 +3,7 @@ import {connect} from 'react-redux';
 import queryString from 'querystring';
 
 import {searchProducts} from '../../config/actions/productsListActions';
+import {sortProductsByPrice} from '../../config/generalFunctions/filters';
 
 const SearchedProducts = (props) => {
     const [searchTerm, setSearchTerm] = useState(queryString.parse(props.location.search.slice(1)).searchTerm);
@@ -11,14 +12,14 @@ const SearchedProducts = (props) => {
     const [sortBy, setSortBy] = useState(1);
     useEffect( () => {
         if( isNew && !props.productsLst && props.token) {
-            props.dispatch(searchProducts(searchTerm));
+            props.dispatch(searchProducts(searchTerm, sortBy));
             setisNew(false);
         }
         if(queryString.parse(props.location.search.slice(1)).searchTerm !== searchTerm) {
             setSearchTerm(queryString.parse(props.location.search.slice(1)).searchTerm);
-            props.dispatch(searchProducts(queryString.parse(props.location.search.slice(1)).searchTerm));
+            props.dispatch(searchProducts(queryString.parse(props.location.search.slice(1)).searchTerm, sortBy));
         }
-    }, [props, searchTerm, setSearchTerm, isNew, setisNew]);
+    }, [props, searchTerm, setSearchTerm, isNew, setisNew, sortBy]);
     return (props.productsList)?(props.productsList.length > 0)?(
         <div>
             <form>
@@ -28,11 +29,11 @@ const SearchedProducts = (props) => {
                             <button onClick={() => {setSortOptions(false)}}>Sort By</button>
                             <br/>
                             <label>
-                                <input type="radio" checked={sortBy === 1} onChange={() => {setSortBy(1)}}/>
+                                <input type="radio" checked={sortBy === 1} onChange={() => {setSortBy(1);sortProductsByPrice(props.productsList, 1)}}/>
                                 Ascending Price
                             </label><br/>
                             <label>
-                                <input type="radio" checked={sortBy === 2} onChange={() => {setSortBy(2)}}/>
+                                <input type="radio" checked={sortBy === 2} onChange={() => {setSortBy(2);sortProductsByPrice(props.productsList, 2)}}/>
                                 Descending Price
                             </label>
                         </div>

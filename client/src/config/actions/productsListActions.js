@@ -1,5 +1,7 @@
 import Axios from '../configAxios';
 
+import {sortProductsByPrice} from '../generalFunctions/filters';
+
 export const loadProductsList = () => {
     return (dispatch, getState) => {
         const token = (getState().token)?getState().token: localStorage.getItem('token');
@@ -23,16 +25,21 @@ export const setProductsList = (products) => {
 
 export const resetProductsList = () => ({type: "RESET_PRODUCTS_LIST"})
 
-export const searchProducts = (searchTerm) => {
+export const searchProducts = (searchTerm, sortBy) => {
     return (dispatch, getState) => {
         Axios.post('/account/product/search', {searchTerm}, {headers: {"x-auth": getState().token}})
             .then( response => {
                 if(response.data) {
                     if(response.data.err) {
-                        dispatch(setProductsList([])) 
+                            dispatch(setProductsList([])); 
                     }
                     else {
-                        dispatch(setProductsList(response.data));
+                        if(sortBy) {
+                            dispatch(setProductsList(sortProductsByPrice([...response.data], sortBy)));
+                        }
+                        else {
+                            dispatch(setProductsList(response.data));
+                        }
                     }
                 }
                 else console.log("Unable to find your Product")

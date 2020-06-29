@@ -24,11 +24,7 @@ const CustomerNavbar = (props) => {
         <div>
             <form onSubmit={(event) => {
                 event.preventDefault(); 
-                if(props.match.path === '/account/search') {
-                    props.history.push(`/account/search?searchTerm=${searchTerm}`);
-                    window.location.reload();
-                }
-                else {
+                if(searchTerm !== '') {
                     props.history.push(`/account/search?searchTerm=${searchTerm}`);
                 }
                 }}>

@@ -14,7 +14,7 @@ const Cart = (props) => {
             setisNew(false);
             
         }
-        if(cartLoaded) {
+        if(props.cart && cartLoaded) {
             let temp = 0;
             props.cart.forEach( item => temp += (item.product.price * item.quantity))
             setTotal(temp);
