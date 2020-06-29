@@ -47,3 +47,26 @@ export const searchProducts = (searchTerm, sortBy) => {
             .catch( err => console.log(err))
     }
 }
+
+export const searchGuestProducts = (searchTerm, sortBy) => {
+    return (dispatch, getState) => {
+        Axios.post('/product/search', {searchTerm})
+            .then( response => {
+                if(response.data) {
+                    if(response.data.err) {
+                            dispatch(setProductsList([])); 
+                    }
+                    else {
+                        if(sortBy) {
+                            dispatch(setProductsList(sortProductsByPrice([...response.data], sortBy)));
+                        }
+                        else {
+                            dispatch(setProductsList(response.data));
+                        }
+                    }
+                }
+                else console.log("Unable to find your Product")
+            })
+            .catch( err => console.log(err))
+    }
+}

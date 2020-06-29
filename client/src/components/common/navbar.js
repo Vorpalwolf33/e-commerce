@@ -10,8 +10,19 @@ const mapStateToProps = (state) => {
 }
 
 const GuestNavbar = (props) => {
+    const [searchTerm, setSearchTerm] = useState('');
     return (
         <div>
+            <form onSubmit={(event) => {
+                event.preventDefault(); 
+                if(searchTerm !== '') {
+                    props.history.push(`/search?searchTerm=${searchTerm}`);
+                }
+                }}>
+                <input type="text" value={searchTerm} onChange={(event) => setSearchTerm(event.target.value)}/>
+                <input type="submit" value="Search"/>
+            </form>
+            <button onClick={() => {props.history.push('/')}}>Home</button>
             <button onClick={() => {props.history.push('/login')}}>Login / Register</button>
         </div>
     )

@@ -1,7 +1,14 @@
 import React, {useState, useEffect} from 'react';
+import { connect } from 'react-redux';
+import {Switch, Route} from 'react-router-dom';
+
 import Sidebar from '../common/sidebar';
 import Navbar from '../common/navbar';
-import { connect } from 'react-redux';
+import HomePageProducts from './homePageComponents/homePageProducts';
+import ShowProduct from '../common/showProduct';
+import Login from './homePageComponents/login';
+import Register from './homePageComponents/register';
+import SearchedProducts from '../common/searchedProducts';
 
 import {loadHomePageProducts} from '../../config/actions/homePageProductsActions';
 import {setToken} from '../../config/actions/tokenActions';
@@ -25,25 +32,16 @@ const Home = (props) => {
     return (
         <div className="home">
             <Navbar />
-            <Sidebar />
-            {
-                props.homePageProducts.map( (row, index) => {
-                    return (
-                        <div key = {index}>
-                            <h3>{row.type}</h3>
-                            {
-                                row.products.map( (product, ind) => {
-                                    return (
-                                        <div key={ind}>
-                                            {product.name}
-                                        </div>
-                                    )
-                                })
-                            }
-                        </div>
-                    )
-                })
-            }                
+            <div>
+                {props.match.url.includes("search")?<Sidebar />:null}
+                <Switch>
+                    <Route path="/" component={HomePageProducts} exact={true}/>
+                    <Route path="/product/:id" component={ShowProduct} />
+                    <Route path="/login" component={Login} exact={true} />
+                    <Route path="/register" component={Register} exact={true} /> 
+                    <Route path="/search" component={SearchedProducts} />
+                </Switch>            
+            </div>
         </div>
     )
 }

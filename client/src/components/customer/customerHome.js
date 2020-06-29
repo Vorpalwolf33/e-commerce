@@ -32,9 +32,13 @@ const CustomerHome = (props) => {
         if(isNew) {
             props.dispatch(loadCart());
             props.dispatch(loadHomePageProducts());
+            if(props.redirect && props.match.url !== props.redirect) {
+                props.history.push(props.redirect);
+            }
             setisNew(false);
         }
     }, [props, setisNew, isNew])
+
     return (
         <div>
             <Navbar />
@@ -55,8 +59,8 @@ const CustomerHome = (props) => {
 }
 
 const mapStateToProps = (state) => {
-    const {homePageProducts, token} = state;
-    return {homePageProducts, token};
+    const {homePageProducts, token, user, redirect} = state;
+    return {homePageProducts, token, user, redirect};
 }
 
 export default connect(mapStateToProps)(CustomerHome);

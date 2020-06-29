@@ -10,6 +10,7 @@ import productListReducer from './reducers/productListReducer';
 import categoriesReducer from './reducers/categoryReducer';
 import cartReducer from './reducers/cartReducer';
 import ordersReducer from './reducers/orderReducer';
+import redirectReducer from './reducers/redirectReducer';
 
 export default () => {
     const store = createStore(combineReducers({
@@ -21,7 +22,8 @@ export default () => {
         productsList: productListReducer,
         categories: categoriesReducer,
         cart: cartReducer,
-        orders: ordersReducer
+        orders: ordersReducer,
+        redirect: redirectReducer
     }), applyMiddleware(thunk));
     return store; 
 }

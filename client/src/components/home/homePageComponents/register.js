@@ -1,9 +1,8 @@
 import React from 'react';
-import Navbar from '../common/navbar';
 import {Link} from 'react-router-dom';
 import { connect } from 'react-redux';
 
-import {registerUser} from '../../config/actions/userActions';
+import {registerUser} from '../../../config/actions/userActions';
 
 class Register extends React.Component {
     constructor(props) {
@@ -38,7 +37,6 @@ class Register extends React.Component {
     render() {
         return (
             <div>
-                <Navbar />
                 Registration Form:
                 <form onSubmit={this.handleSubmit}>
                     <label>

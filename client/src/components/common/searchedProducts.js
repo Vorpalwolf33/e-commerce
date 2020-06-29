@@ -2,7 +2,7 @@ import React, {useState, useEffect} from 'react';
 import {connect} from 'react-redux';
 import queryString from 'querystring';
 
-import {searchProducts} from '../../config/actions/productsListActions';
+import {searchProducts, searchGuestProducts} from '../../config/actions/productsListActions';
 import {sortProductsByPrice} from '../../config/generalFunctions/filters';
 
 const SearchedProducts = (props) => {
@@ -11,13 +11,22 @@ const SearchedProducts = (props) => {
     const [sortOptions, setSortOptions] = useState(false);
     const [sortBy, setSortBy] = useState(1);
     useEffect( () => {
-        if( isNew && !props.productsLst && props.token) {
+        if( isNew && !props.productsLst && props.token && props.match.url.includes('account')) {
             props.dispatch(searchProducts(searchTerm, sortBy));
+            setisNew(false);
+        }
+        if( isNew && !props.productsLst && !props.match.url.includes('account')) {
+            props.dispatch(searchGuestProducts(searchTerm, sortBy));
             setisNew(false);
         }
         if(queryString.parse(props.location.search.slice(1)).searchTerm !== searchTerm) {
             setSearchTerm(queryString.parse(props.location.search.slice(1)).searchTerm);
-            props.dispatch(searchProducts(queryString.parse(props.location.search.slice(1)).searchTerm, sortBy));
+            if(props.match.url.includes('account')) {
+                props.dispatch(searchProducts(queryString.parse(props.location.search.slice(1)).searchTerm, sortBy));
+            }
+            else  {
+                props.dispatch(searchGuestProducts(queryString.parse(props.location.search.slice(1)).searchTerm, sortBy));
+            }
         }
     }, [props, searchTerm, setSearchTerm, isNew, setisNew, sortBy]);
     return (props.productsList)?(props.productsList.length > 0)?(
@@ -46,7 +55,7 @@ const SearchedProducts = (props) => {
             {
                 props.productsList.map( (product, index) => {
                     return (
-                        <div key={index} onClick={() => {props.history.push(`/account/product/${product._id}`);}}>
+                        <div key={index} onClick={() => {props.history.push(`${props.match.url.includes('account')?"/account":""}/product/${product._id}`);}}>
                             <h4>{product.name}</h4>
                             <div>
                                 Price: ${product.price}
@@ -62,7 +71,7 @@ const SearchedProducts = (props) => {
             }
         </div>):(
             <div>Could not find any matching Products</div>
-        ):<div></div>
+        ):<div>Products List is empty</div>
 }
 
 const mapStateToProps = (state) => {

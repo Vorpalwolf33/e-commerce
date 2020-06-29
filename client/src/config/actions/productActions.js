@@ -52,7 +52,7 @@ export const resetProduct = () => ({type: "RESET_PRODUCT"})
 
 export const loadProduct = (id) => {
     return (dispatch, getState) => {
-        Axios.get(`/product/${id}`, {headers: {"x-auth": getState().token}})
+        Axios.get(`/product/${id}`)
             .then( response => {
                 const data = response.data;
                 if(data) {
