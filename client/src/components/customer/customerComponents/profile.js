@@ -49,7 +49,10 @@ const Profile = (props) => {
         if(props.user && !props.user.email) {
             props.dispatch(loadProfile());
         }
-    }, [props])
+        if(props.user && props.user.address && props.user.address !== address) {
+            setAddress(props.user.address);
+        }
+    }, [props, address])
 
     return (props.user && props.user.email)?(
         <div>
@@ -72,6 +75,7 @@ const Profile = (props) => {
                                 if(checkIfProfileAltered(props.user, {username, email, mobile, address})) {
                                     props.dispatch(updateUser({username, email, mobile, address}));
                                 }
+                                setEditProfile(false);
                         }}>
                             Update
                         </button>

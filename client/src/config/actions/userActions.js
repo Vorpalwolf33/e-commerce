@@ -126,7 +126,7 @@ export const removeAddress = (_id) => {
                 if(data && data.success) {
                     const user = {...getState().user};
                     user.address = user.address.filter( ele => ele._id !== _id);
-                    dispatch(setUser(user));
+                    dispatch(setUser({...user}));
                 }
                 else console.log("Some error occurred while adding the address");
             })

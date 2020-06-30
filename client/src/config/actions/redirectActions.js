@@ -1,5 +1,3 @@
-const { PromiseProvider } = require("mongoose");
-
 export const setRedirect = (path) => {
     return {
         type: "SET_REDIRECT",
