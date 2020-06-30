@@ -12,6 +12,7 @@ const CustomerSidebar = (props) => {
 
 const AdminSidebar = (props) => {
     const [showProductOptions, changeProductOptions] = useState(false);
+    const [showOrderOptions, changeOrderOptions] = useState(false)
     return (
         <div>
             <Link to="/admin/dashboard"><button>Dashboard</button></Link>
@@ -21,6 +22,18 @@ const AdminSidebar = (props) => {
                     <div>
                         <Link to="/admin/product"><button>List Products</button></Link>
                         <Link to="/admin/product/add"><button>Add Product</button></Link>
+                    </div>
+                ):null
+            }
+            <button onClick={() => {changeOrderOptions(!showOrderOptions)}}>Orders</button>
+            {
+                (showOrderOptions)? (
+                    <div>
+                        <Link to="/admin/order/list/all"><button>All Orders</button></Link>
+                        <Link to="/admin/order/list/ordered"><button>Placed Orders</button></Link>
+                        <Link to="/admin/order/list/shipped"><button>Shipped Orders</button></Link>
+                        <Link to="/admin/order/list/outfordelivery"><button>Out for Delivery</button></Link>
+                        <Link to="/admin/order/list/delivered"><button>Delivered</button></Link>
                     </div>
                 ):null
             }

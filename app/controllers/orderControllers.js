@@ -118,3 +118,79 @@ module.exports.cartOrder = (req, res) => {
         })
         .catch( err => res.json(err))
 }
+
+module.exports.adminList = (req, res) => {
+    const filter = req.body.filter;
+    if(filter !== 'all') {
+        Order.find({status: filter}).populate('orderItems.product').populate('userId')
+            .then( filteredOrders => {
+                if(filteredOrders) {
+                    res.json(filteredOrders);
+                }
+                else return Promise.reject({err: "Could not filter orders"})
+            })
+            .catch( err => res.json(err))
+    }
+    else {
+        Order.find().populate('orderItems.product').populate('userId')
+            .then( orders => {
+                if(orders) {
+                    res.json(orders);
+                }
+                else return Promise.reject({err: "Error while retreiving the orders"})
+            })
+            .catch( err => res.json(err))
+    }
+}
+
+module.exports.show = (req, res) => {
+    Order.findById(req.body._id).populate('userId').populate('orderItems.product')
+        .then( order => {
+            if(order) {
+                const {order_date, total, status, _id} = order;
+                const temp = {order_date, total, status, _id}
+                temp.userId = {username: order.userId.username, _id: order.userId._id};
+                temp.orderItems = order.orderItems.map( item => ({
+                    _id: item._id,
+                    product: {name: item.product.name, price: item.product.price, _id: item.product._id},
+                    quantity: item.quantity
+                }));
+                res.json(temp);
+            }
+            else Promise.reject({err: "Could not retrieve or populate the order"});
+        })
+        .catch( err => res.json(err))
+}
+
+module.exports.progress = (req, res) => {
+    Order.findById(req.body._id)
+        .then( order => {
+            if(order) {
+                switch(order.status) {
+                    case "Order Placed":
+                        order.status = "Shipped"; 
+                        break;
+                    case "Shipped":
+                        order.status = "Out for Delivery";
+                        break;
+                    case "Out for Delivery":
+                        order.status = "Delivered";
+                        break;
+                    case "Delivered": 
+                        order.status = "Order Placed";
+                        break;
+                    default: break;
+                }
+                return order.save()
+            }
+            else return Promise.reject({err: "Error while retrieving the order"})
+        })
+        .then( savedOrder => {
+            if(savedOrder) {
+                res.json({status: savedOrder.status});
+            }
+            else return Promise.reject({err: "Error while saving the updated order"});
+
+        })
+        .catch( err => res.json(err))
+}

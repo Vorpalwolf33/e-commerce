@@ -40,5 +40,8 @@ routes.post('/account/order/add', authenticateUser, orderControllers.add);
 routes.get('/account/order/cartOrder', authenticateUser, orderControllers.cartOrder);
 routes.get('/account/order/list', authenticateUser, orderControllers.list);
 routes.post('/account/order/cancel', authenticateUser, orderControllers.cancel);
+routes.post('/admin/order/list', authoriseUser, orderControllers.adminList)
+routes.post('/admin/order/show', authoriseUser, orderControllers.show);
+routes.post('/admin/order/progress', authoriseUser, orderControllers.progress);
 
 module.exports = routes;

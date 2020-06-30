@@ -8,13 +8,14 @@ const orderSchema = new Schema({
     },
     userId: {
         type: Schema.Types.ObjectId,
+        ref: "User",
         required: true
     },
     total: {
         type: Number,
         default: 0
     },
-    // Let there be 4 status of orders( Order Placed, Shipped, Out for Deliver, Delivered)
+    // Let there be 4 status of orders( Order Placed, Shipped, Out for Delivery, Delivered)
     status: {
         type: String,
         default: "Order Placed"

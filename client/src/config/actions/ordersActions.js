@@ -76,3 +76,61 @@ export const orderFromCart = (redirect) => {
             .catch(err => console.log(err))
     }
 }
+
+export const ordersList = (filter) => {
+    return (dispatch, getState) => {
+        switch( filter ) {
+            case "ordered":
+                filter = "Order Placed";
+                break;
+            case "shipped":
+                filter = "Shipped";
+                break;
+            case "outfordelivery":
+                filter = "Out for Delivery";
+                break;
+            case "delivered":
+                filter = "Delivered";
+                break;
+            default: break;
+        }
+        Axios.post('/admin/order/list', {filter}, {headers: {"x-auth": getState().token}})
+            .then( response => {
+                const data = response.data;
+                if(data) {
+                    dispatch(setOrders(data));
+                }
+                else {
+                    console.log("Error while retrieving orders")
+                }
+            })
+            .catch(err => console.log(err))
+    }
+}
+
+export const loadOrderDetails = (_id) => {
+    return (dispatch, getState) => {
+        Axios.post('/admin/order/show', {_id}, {headers: {"x-auth": getState().token}})
+            .then( response => {
+                const data = response.data;
+                if(data) {
+                    dispatch(setOrders(data));
+                }
+            })
+            .catch( err => console.log(err))
+    }
+}
+
+export const progressOrder = (_id) => {
+    return (dispatch, getState) => {
+        Axios.post('admin/order/progress', {_id}, {headers: {"x-auth": getState().token}})
+            .then( response => {
+                if(response.data && response.data.status) {
+                    const order = {...getState().orders};
+                    order.status = response.data.status;
+                    dispatch(setOrders(order));
+                }
+            })
+            .catch( err => console.log(err))
+    }
+}

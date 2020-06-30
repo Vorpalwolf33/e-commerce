@@ -25,7 +25,7 @@ const Categories = (props) => {
                             props.categories.map( (category, index) => {
                                 return (selectedCategory === category._id)? (
                                         <div key={index}>
-                                            <form onSubmit={(event) => { event.preventDefault(); const temp = {...category}; temp.name = updatedName;props.dispatch(updateCategory(temp)); setSelectedCategory(""); }}>
+                                            <form onSubmit={(event) => { event.preventDefault();props.dispatch(updateCategory({_id: category._id, name: updatedName})); setSelectedCategory(""); }}>
                                                 <input type="text" value={updatedName} onChange={(event) => setUpdatedName(event.target.value)} />
                                                 <input type="submit" value="Update" />
                                             </form>

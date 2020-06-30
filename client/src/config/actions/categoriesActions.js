@@ -8,9 +8,9 @@ export const addCategory = (categoryName) => {
                 const data = response.data;
                 if(!getState().categories && data)  dispatch(setCategories([data]));
                 else {
-                    const state = getState().categories;
-                    state.push(data);
-                    dispatch(setCategories(state));
+                    const categories = [...getState().categories];
+                    categories.push(data);
+                    dispatch(setCategories(categories));
                 }  
             })
             .catch(err => console.log(err))
@@ -55,7 +55,7 @@ export const updateCategory = (category) => {
             .then( response => {
                 const data = response.data;
                 if(data) {
-                    const categories = getState().categories;
+                    const categories = [...getState().categories];
                     for(let i = 0; i < categories.length; ++i) {
                         if(categories[i]._id === data._id) {
                             categories[i] = data;

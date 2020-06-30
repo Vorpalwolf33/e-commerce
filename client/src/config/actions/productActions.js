@@ -19,21 +19,21 @@ export const updateProduct = (product, redirect) => {
             .then( response => {
                 const {data} = response;
                 if(data) {
-                    redirect("/admin/product");
+                    redirect("/admin/product/" + product._id);
                 }
             })
             .catch(err => console.log(err))
     }
 }
 
-export const removeProduct = (id) => {
+export const removeProduct = (id, redirect) => {
     return (dispatch, getState) => {
         Axios.post('/account/product/remove', {id}, {headers: {"x-auth": getState().token}})
             .then( response => {
                 const data = response.data;
                 if(data) {
                     if(data.success) {
-                        window.location.reload();
+                        redirect('/admin/product');
                     }
                 }
             })

@@ -25,7 +25,7 @@ module.exports.list = (req, res) => {
 
 module.exports.update = (req, res) => {
     const category = req.body.category;
-    Category.findOneAndUpdate({_id: category._id}, {name: category.name})
+    Category.findOneAndUpdate({_id: category._id}, {name: category.name}, {new: true})
         .then( updatedCategory => {
             if(updatedCategory) {
                 res.json(updatedCategory);

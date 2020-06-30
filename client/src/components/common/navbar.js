@@ -65,7 +65,6 @@ const CustomerNavbar = (props) => {
 const AdminNavbar = (props) => {
     return (
         <div>
-            <button>Profile</button>
             <button onClick={() => {props.dispatch(logoutUser(props.history.push))}}>Logout</button>
         </div>
     )
