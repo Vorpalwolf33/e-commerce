@@ -1,6 +1,7 @@
 import Axios from '../configAxios';
 
 import {resetCart} from './cartActions';
+import {cartProductsImageParser} from '../generalFunctions/imageParser'
 
 export const setOrders = (orders) => {
     return {
@@ -30,6 +31,10 @@ export const loadOrders = () => {
         Axios.get('/account/order/list', {headers: {"x-auth": getState().token}})
             .then( (response) => {
                 const orders = response.data;
+                orders.forEach( (order, index) => {
+                    cartProductsImageParser(order.orderItems);
+                    orders[index] = order;
+                })
                 if(orders) {
                     dispatch(setOrders(orders));
                 }

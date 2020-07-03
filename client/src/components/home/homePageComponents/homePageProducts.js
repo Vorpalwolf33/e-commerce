@@ -15,6 +15,12 @@ const HomePageProducts = (props) => {
                             row.products.map( (product, ind) => {
                                 return (
                                     <div key={ind} onClick={() => {props.history.push(`/product/${product._id}`);}}>
+                                        {
+                                            (product.images && product.images[0] && product.images[0].img)? (
+                                                <img src={product.images[0].img} alt=""/>
+                                            ):null
+                                        }
+                                        <br/>
                                         {product.name}
                                         <br/>
                                         Price: ${product.price}

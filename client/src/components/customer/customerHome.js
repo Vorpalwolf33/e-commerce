@@ -12,7 +12,6 @@ import Order from './customerComponents/order';
 import Profile from './customerComponents/profile';
 import SearchedProducts from '../common/searchedProducts';
 
-import {loadHomePageProducts} from '../../config/actions/homePageProductsActions';
 import {setToken} from '../../config/actions/tokenActions';
 import {loadCart} from '../../config/actions/cartActions';
 import {loadUserDetails} from '../../config/actions/userActions';
@@ -31,7 +30,6 @@ const CustomerHome = (props) => {
         }
         if(isNew) {
             props.dispatch(loadCart());
-            props.dispatch(loadHomePageProducts());
             if(props.redirect && props.match.url !== props.redirect) {
                 props.history.push(props.redirect);
             }

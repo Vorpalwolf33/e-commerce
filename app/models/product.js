@@ -28,28 +28,19 @@ const productSchema = new Schema({
     stock: {
         type: Number,
         required: true
-    }
-})
-
-productSchema.pre('save', function() {
-    const product = this;
-    product.categories.forEach( cat => {
-        category.findOne({name: cat})
-            .then( foundCat => {
-                if(foundCat == null) {
-                    const category = new Category({cat});
-                    category.save()
-                        .then( savedCat => {
-                            product.categoryId.push(savedCat._id);
-                        })
-                        .catch(err => console.log(err))
-                }
-            })
-            .catch( err => console.log(err));
-    });
-    if(!product.isNew) {
-        next();
-    }
+    },
+    images: [
+        {
+            filename: {
+                type: String,
+                required: true 
+            },
+            file: {
+                type: Buffer,
+                default: undefined
+            }
+        }
+    ]
 })
 
 const Product = mongoose.model('Product', productSchema);

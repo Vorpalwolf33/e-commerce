@@ -11,15 +11,20 @@ const Order = (props) => {
             setisNew(false); 
         }
     }, [props, isNew, setisNew])
-    return (props.orders)? (
+    return (props.orders && props.orders.length > 0)? (
         <div>
             Listing Orders:
             {
                 props.orders.map( (order, index) => (
-                    <div key={index}>
+                    <div key={index}><hr/>
                         {
                             order.orderItems.map( (item, ind) => (
                                 <div key={ind}>
+                                    {
+                                        (item.product.images && item.product.images[0] && item.product.images[0].img)? (
+                                            <img src={item.product.images[0].img} alt=""/>
+                                        ):null
+                                    }
                                     <h4>{item.product.name}</h4>
                                     <div>Price: ${item.product.price}</div>
                                     <div>Quantity: {item.quantity}</div>
@@ -29,6 +34,7 @@ const Order = (props) => {
                         }
                         <div>Total: {order.total}</div>
                         <button onClick={() => {props.dispatch(cancelOrder(order._id))}}>Cancel</button>
+                        <hr/>
                     </div>
                 ))
             }

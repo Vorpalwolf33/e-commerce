@@ -3,6 +3,7 @@ import {connect} from 'react-redux'
 
 import {loadCategories} from '../../../../config/actions/categoriesActions';
 import {addProduct, updateProduct} from '../../../../config/actions/productActions';
+import {loadProduct} from '../../../../config/actions/productActions';
 
 class ProductForm extends React.Component {
     constructor(props) {
@@ -13,17 +14,21 @@ class ProductForm extends React.Component {
             price: 0,
             categoryId: [],
             isAvailable: false,
-            stock: 0
+            stock: 0,
+            image: '',
+            imageFile: '',
+            displayImage: ''
         }
     }
 
     componentDidMount() {
         this.props.dispatch(loadCategories());
         if(this.props.product && this.props.type === "modify") {
+            const {product} = this.props;
+            product.image = '';
+            product.imageFile = '';
+            product.displayImage = this.props.product.images[0].img;
             this.setState(this.props.product);
-        }
-        if(!this.props.product && this.props.type === "modify") {
-            this.props.history.push('/admin/product');
         }
     }
 
@@ -33,13 +38,31 @@ class ProductForm extends React.Component {
         })
     }
 
+
     handleSubmit = event => {
         event.preventDefault();
         if(this.props.type === "add") {
-            this.props.dispatch(addProduct({...this.state}, this.props.redirect));
+            if(this.state.imageFile !== '') {
+                this.props.dispatch(addProduct({...this.state}, this.props.redirect));
+            } 
+            else {
+                console.log("Image must be chosen to display");
+            }            
         }
         if(this.props.type === "modify") {
-            this.props.dispatch(updateProduct({...this.state}, this.props.history.push));
+            if(this.state.image) {
+                this.props.dispatch(updateProduct({_id: this.props.product._id, ...this.state }, this.props.redirect));
+            }
+            else {
+                this.props.dispatch(updateProduct({_id: this.props.product._id, ...this.state    }, this.props.redirect));   
+            }
+        }
+    }
+
+    handleFileSelection = event => {
+        if(event.target.files && event.target.files[0]) {
+            const file = event.target.files[0];
+            this.setState({image: event.target.value, imageFile: file, displayImage: URL.createObjectURL(event.target.files[0])});
         }
     }
 
@@ -62,7 +85,6 @@ class ProductForm extends React.Component {
         });
     }
 
-
     render() {
         return (
             <form onSubmit={this.handleSubmit}>
@@ -70,6 +92,18 @@ class ProductForm extends React.Component {
                     Product Name:
                     <input type="text" name="name" value={this.state.name} onChange={this.handleChange}/>
                 </label><br/>
+                
+                <label>
+                    Image:
+                    {
+                        (this.state.displayImage)? (
+                            <div>
+                                <img src={this.state.displayImage} />
+                            </div>
+                        ):null
+                    }
+                    <input type="file" name="images" value={this.state.image} onChange={this.handleFileSelection} accept=".jpg,.jpeg,.png" />
+                </label><br/><br/>
                 
                 <label>
                     Description:<br/>
@@ -101,6 +135,7 @@ class ProductForm extends React.Component {
                     Stock:
                     <input type="number" name="stock" value={this.state.stock} onChange={this.handleChange}/>
                 </label><br/>
+
 
                 <input type="submit" value={(this.props.type === "add")?"Create Product":"Update Product"}/>
             </form>

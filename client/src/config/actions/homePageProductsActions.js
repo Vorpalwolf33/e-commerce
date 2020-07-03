@@ -1,12 +1,22 @@
 import Axios from '../configAxios';
 
+import {imageParser} from '../generalFunctions/imageParser';
+
 export const loadHomePageProducts = () => {
     return (dispatch, getState) => {
         const token = getState().token;
         Axios.get(`${(token)?'/account':''}/homePageProducts`, (token)?{headers: {"x-auth": token}}:{})
             .then( response => {
                 const homePageProducts = response.data;
-                if(homePageProducts.length > 0) dispatch( setHomePageProducts(homePageProducts) );
+                if(homePageProducts.length > 0)  {
+                    // console.log(homePageProducts);
+                    homePageProducts.forEach( (cat, index) => {
+                        cat.products.forEach( (product, ind) => {
+                            homePageProducts[index].products[ind].images[0].img = imageParser(product.images[0].file.data);
+                        })
+                    })
+                    dispatch( setHomePageProducts(homePageProducts) );
+                }
                 
                 // To test the functionality when the products are available
                 else dispatch(setHomePageProducts([

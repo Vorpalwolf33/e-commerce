@@ -1,5 +1,7 @@
 import Axios from '../configAxios';
 
+import {cartProductsImageParser} from '../generalFunctions/imageParser';
+
 export const addToCart = (cartItem) => {
     return (dispatch, getState) => {
         Axios.post("/account/cart/add", {cartItem}, {headers: {"x-auth": getState().token}})
@@ -47,6 +49,7 @@ export const loadCartProducts = (setCartLoaded) => {
             .then( response => {
                 const data = response.data;
                 if(data) {
+                    cartProductsImageParser(data);       
                     setCartLoaded(true);
                     dispatch(setCart(data));
                 }

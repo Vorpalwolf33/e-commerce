@@ -1,6 +1,7 @@
 const Order = require('../models/order');
 const Product = require('../models/product');
-const { findOneAndDelete } = require('../models/order');
+
+const {loadImagesForCart} = require('../generalFunctions/imageOperations');
 
 module.exports.add = (req, res) => {
     const userId = req.user._id;
@@ -35,6 +36,10 @@ module.exports.list = (req, res) => {
     Order.find({userId}).populate('orderItems.product')
         .then( (orders) => {
             if(orders) {
+                orders.forEach( (order, index) => {
+                    loadImagesForCart(order.orderItems);
+                    orders[index] = order
+                })
                 res.json(orders)
             }
         })

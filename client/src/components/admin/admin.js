@@ -39,7 +39,7 @@ const Admin = (props) => {
                     <Route path="/admin/dashboard" exact={true} component={Dashboard} />
                     <Route path="/admin/product" exact={true} component={ListProducts} />
                     <Route path="/admin/product/add" exact={true} component={AddProduct} />
-                    <Route path="/admin/product/modify" exact={true} component={ModifyProduct} />
+                    <Route path="/admin/product/modify/:id" exact={true} component={ModifyProduct} />
                     <Route path="/admin/categories" exact={true} component={Categories} />
                     <Route path="/admin/product/:id" exact={true} component={ShowProduct} />
                     <Route path="/admin/order/list/:filter" component={OrdersList} />

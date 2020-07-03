@@ -27,6 +27,11 @@ const Cart = (props) => {
                 props.cart.map( (cartItem, index) => {
                     return (
                         <div key={index}>
+                            {
+                                (cartItem.product.images && cartItem.product.images[0] && cartItem.product.images[0].img)? (
+                                    <img src={cartItem.product.images[0].img} alt=""/>
+                                ):null
+                            }
                             <h4>{cartItem.product.name}</h4>
                             <div>
                                 Price: {cartItem.product.price}

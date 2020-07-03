@@ -1,5 +1,7 @@
 const User = require('../models/user');
 
+const {loadImagesForCart} = require('../generalFunctions/imageOperations');
+
 module.exports.register = (req, res) => {
     console.log("From register");
     const body = req.body;
@@ -92,6 +94,7 @@ module.exports.list = (req, res) => {
     user.populate('cart.product').execPopulate()
         .then( populatedUser => {
             if(populatedUser) {
+                loadImagesForCart(populatedUser.cart);
                 res.json(populatedUser.cart);
             }
         })

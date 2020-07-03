@@ -10,6 +10,11 @@ import {setRedirect, resetRedirect} from '../../config/actions/redirectActions';
 const GuestProduct = (props) => {
     return (
         <div>
+            {
+                (props.product.images && props.product.images[0] && props.product.images[0].img)? (
+                    <img src={props.product.images[0].img} alt=""/>
+                ):null
+            }
             <h4>{props.product.name}</h4>
             <div>Price: ${props.product.price}</div>
             <div>
@@ -40,6 +45,11 @@ const CustomerProduct = (props) => {
     }, [isInCart, props])
     return (
         <div>
+            {
+                (props.product.images && props.product.images[0] && props.product.images[0].img)? (
+                    <img src={props.product.images[0].img} alt=""/>
+                ):null
+            }
             <h4>{props.product.name}</h4>
             <div>Price: ${props.product.price}</div>
             <div>
@@ -74,10 +84,15 @@ const CustomerProduct = (props) => {
 const AdminProduct = (props) => {
     return (
         <div>
+            {
+                (props.product.images && props.product.images[0] && props.product.images[0].img)? (
+                    <img src={props.product.images[0].img} alt=""/>
+                ):null
+            }
             <h4>{props.product.name}</h4>
             <div>Price: ${props.product.price}</div>
             <div>
-                <button onClick={ () => {props.dispatch(setProduct(props.product)); props.history.push('/admin/product/modify');}}>Modify</button>
+                <button onClick={ () => {props.dispatch(setProduct(props.product)); props.history.push(`/admin/product/modify/${props.product._id}`);}}>Modify</button>
                 <button onClick={ () => { 
                     if(window.confirm("Are you sure")) {
                         props.dispatch(removeProduct(props.product._id, props.history.push));         

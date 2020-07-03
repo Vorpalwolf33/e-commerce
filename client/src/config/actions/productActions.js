@@ -1,9 +1,16 @@
 import Axios from '../configAxios';
 
+import {imageParser} from '../generalFunctions/imageParser';
+
 export const addProduct = (product, redirect) => {
     return (dispatch, getState) => {
-        const token = (getState().token)?getState().token : localStorage.getItem('token');
-        Axios.post('/account/product/add', {...product      }, {headers: {"x-auth": token}})
+        const data = new FormData();
+        delete product.image;
+        delete product.displayImage;
+        for( let key in product) {
+            data.append(key, product[key]);
+        }
+        Axios.post('/account/product/add', data, {headers: {"x-auth": getState().token}})
             .then( response => {
                 const {data} = response;
                 if(data) {
@@ -14,8 +21,15 @@ export const addProduct = (product, redirect) => {
 }
 
 export const updateProduct = (product, redirect) => {
+    const data = new FormData();
+    delete product.image;
+    delete product.displayImage;
+    product.images = product.images[0].filename;
+    for(let key in product) {
+        data.append(key, product[key]);
+    }
     return (dispatch, getState) => {
-        Axios.post('/account/product/update', {product}, {headers: {"x-auth": getState().token}})
+        Axios.post('/account/product/update', data, {headers: {"x-auth": getState().token}})
             .then( response => {
                 const {data} = response;
                 if(data) {
@@ -33,7 +47,7 @@ export const removeProduct = (id, redirect) => {
                 const data = response.data;
                 if(data) {
                     if(data.success) {
-                        redirect('/admin/product');
+                        redirect(`/admin/product`);
                     }
                 }
             })
@@ -56,7 +70,10 @@ export const loadProduct = (id) => {
             .then( response => {
                 const data = response.data;
                 if(data) {
-                    dispatch(setProduct(data));
+                    if(data.images.length > 0) {
+                        data.images[0].img = imageParser(data.images[0].file.data);
+                    }
+                        dispatch(setProduct(data));
                 }
             })
             .catch(err => console.log(err))
